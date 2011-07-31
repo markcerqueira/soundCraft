@@ -1,0 +1,3 @@
+[submodule "lib/fssm"]
+	path = lib/fssm
+	url = git://github.com/ttilley/fssm.git
