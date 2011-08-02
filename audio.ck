@@ -24,10 +24,10 @@ while ( true )
 
         <<< "got (via OSC):", key, " ", value >>>;
         
-        if ( key == "vespene" )
+        if ( key == "current_mineral_count" )
             value => s.freq;
         
-        if ( key == "mineralsCollected" )
+        if ( key == "current_vespene_count" )
             value / 1000 => r.mix;
     }
 }

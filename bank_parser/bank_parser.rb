@@ -10,7 +10,7 @@ SERVER_PORT = 6449
 
 BANK_PATH = '/Users/Mark/Library/Application Support/Blizzard/StarCraft II/Accounts/65359401/1-S2-1-1685872/Banks'
 
-RESOURCES_BANK = 'tutorialBank1.SC2Bank'
+RESOURCES_BANK = 'resourcesBank.SC2Bank'
 
 def sendEconomy
   doc = Nokogiri::XML( open( BANK_PATH + '/' + RESOURCES_BANK ) )
