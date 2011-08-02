@@ -5,6 +5,8 @@ OscRecv recv;
 // start listening (launch thread)
 recv.listen();
 
+SinOsc s => JCRev r => dac;
+
 // create an address in the receiver, store in new variable
 recv.event( "/plorkCraft/test, s s" ) @=> OscEvent oe;
 
@@ -17,6 +19,15 @@ while ( true )
     // grab the next message from the queue. 
     while ( oe.nextMsg() != 0 )
     { 
-        <<< "got (via OSC):", oe.getString(), " ", oe.getString() >>>;
+		oe.getString() => string key;
+		Std.atoi( oe.getString() ) => int value;
+
+        <<< "got (via OSC):", key, " ", value >>>;
+        
+        if ( key == "vespene" )
+            value => s.freq;
+        
+        if ( key == "mineralsCollected" )
+            value / 1000 => r.mix;
     }
 }
