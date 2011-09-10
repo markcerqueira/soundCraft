@@ -1,3 +1,16 @@
 LOrkCraft - Sonification of a Starcraft 2 Game
 
 Copyright (c) 2011 Mark Cerqueira. All rights reserved.
+
+Current Bank Layout:
+	Minerals Updates (mineralBank)
+		Triggers: player mineral changes
+		Sends: current mineral count, total minerals collected during game
+	
+	Vespene Updates (vespeneBank)
+		Triggers: player vespene changes
+		Sends: current vespene count, total vespene collected during game
+		
+	Supply Updates (supplyBank)
+		Triggers: player uses up supply or creates more supply
+		Sends: current supplies being used, supplies made, supply limit (normally 200)
