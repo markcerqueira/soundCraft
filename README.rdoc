@@ -1,7 +1,23 @@
 = LOrkCraft - Sonification of a Starcraft 2 Game
 <em>It's GO time!</em>
 
-== BANK LAYOUT
+== CUSTOM MAP INFO
+=== DATA COLLECTED BY MAP
+1. Write supply every time supply is used/made
+2. Write vespene collected/current count every time it changes
+3. Write mineral collected/current count every time it changes
+4. Write out user chat messages
+5. Write APM to every second
+
+In Progress:
+When units are given a command, write out command (attack/move) and destination
+When a unit dies write out current unit counts
+When a unit is built write out current unit counts
+When a player moves the camera write out location user is looking at
+Write out unit production progress status every second
+Write out research progress status every second
+
+=== BANK LAYOUT
 1. Minerals Updates (mineralBank)
 	Triggers: player mineral changes
 	Sends: current mineral count, total minerals collected during game
@@ -14,7 +30,5 @@
 	Triggers: player uses up supply or creates more supply
 	Sends: current supplies being used, supplies made
 
-== MORE INFO
-
-== CONTRIBUTE
+== LICENSE
 Copyright (c) 2013 Mark Cerqueira. All rights reserved.
