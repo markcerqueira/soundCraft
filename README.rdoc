@@ -1,6 +1,14 @@
 = LOrkCraft
 <em>Sonification of a Starcraft 2 Game!</em>
 
+== FILES
+1. *lorkCraftShipyard.SC2Map* - the Antiga Shipyard map (forced cross-spawns at the 5 and 11 o'clock positions) with the custom data-collecting triggers applied to it
+2. *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map (uses FSSM, Nokogiri, and OSC)
+3. *audio.ck* - prototype audio synthesizer written in ChucK that receives OSC messages from the bank parser to produce sound 
+
+== DATA FLOW
+User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, research progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of Starcraft 2, but so far the latency does not seem bad. A Ruby script monitors the folder containing the bank files using the File System State Monitor (FSSM) and when those files are modified, the XML files are parsed using Nokogiri and OSC messages are dispatched. Any OSC listener can catch those messages and process them to display data or produce sound.
+
 == CUSTOM MAP INFO
 === DATA COLLECTED BY MAP
 1. Write supply every time supply is used/made
