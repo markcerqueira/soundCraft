@@ -9,7 +9,7 @@
 4. Write out user chat messages
 5. Write APM to every second
 
-In Progress:
+=== In Progress/Coming Soon
 1. When units are given a command, write out command (attack/move) and destination
 2. When a unit dies write out current unit counts
 3. When a unit is built write out current unit counts
@@ -30,5 +30,13 @@ In Progress:
 	Triggers: player uses up supply or creates more supply
 	Sends: current supplies being used, supplies made
 
+4. APM Bank (apmBank)
+	Timer: every second
+	Sends: current user apm (player_apm)
+
+5. Chat Bank (chatBank)
+	Trigger: player sends chat message
+	Sends: string of the message the player sent (chat_string)
+
 == LICENSE
-Copyright (c) 2013 Mark Cerqueira. All rights reserved.
+Copyright (c) 2013 Steamed Code Buns. All rights reserved.
