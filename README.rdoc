@@ -19,16 +19,16 @@
 
 === BANK LAYOUT
 1. Minerals Updates (mineralBank)
-  Triggers: player mineral changes
-  Sends: current mineral count, total minerals collected during game
+* Triggers: player mineral changes
+* Sends: current mineral count, total minerals collected during game
 	
 2. Vespene Updates (vespeneBank)
 * Triggers: player vespene changes
 * Sends: current vespene count, total vespene collected during game
 		
 3. Supply Updates (supplyBank)
-  * Triggers: player uses up supply or creates more supply
-  * Sends: current supplies being used, supplies made
+* Triggers: player uses up supply or creates more supply
+* Sends: current supplies being used, supplies made
 
 4. APM Bank (apmBank)
 	Timer: every second
