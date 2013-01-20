@@ -18,7 +18,7 @@
 6. Write out research progress status every second
 
 === BANK LAYOUT
-* Minerals Updates (mineralBank)
+Minerals Updates (mineralBank)
 * Triggers: player mineral changes
 * Sends: current mineral count, total minerals collected during game
 	
@@ -39,4 +39,4 @@ Chat Bank (chatBank)
 * Sends: string of the message the player sent (chat_string)
 
 == LICENSE
-Copyright (c) 2013 Steamed Code Buns. All rights reserved.
+Copyright (c) 2013 VORGOM.COM. All rights reserved.
