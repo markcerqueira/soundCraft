@@ -1,5 +1,5 @@
-= LOrkCraft - Sonification of a Starcraft 2 Game
-<em>It's GO time!</em>
+= LOrkCraft
+<em>Sonification of a Starcraft 2 Game!</em>
 
 == CUSTOM MAP INFO
 === DATA COLLECTED BY MAP
@@ -10,12 +10,12 @@
 5. Write APM to every second
 
 In Progress:
-When units are given a command, write out command (attack/move) and destination
-When a unit dies write out current unit counts
-When a unit is built write out current unit counts
-When a player moves the camera write out location user is looking at
-Write out unit production progress status every second
-Write out research progress status every second
+1. When units are given a command, write out command (attack/move) and destination
+2. When a unit dies write out current unit counts
+3. When a unit is built write out current unit counts
+4. When a player moves the camera write out location user is looking at
+5. Write out unit production progress status every second
+6. Write out research progress status every second
 
 === BANK LAYOUT
 1. Minerals Updates (mineralBank)
