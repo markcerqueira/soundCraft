@@ -11,19 +11,35 @@ User data is collected as events occur (e.g. minerals collected, units die) or a
 
 == CUSTOM MAP INFO
 === DATA COLLECTED BY MAP
-1. Write supply every time supply is used/made
-2. Write vespene collected/current count every time it changes
-3. Write mineral collected/current count every time it changes
-4. Write out messages a user types in chat
-5. Write APM to every second
-6. When a unit/building is built write out current army/building composition
+* Write supply every time supply is used/made
+* Write vespene collected/current count every time it changes
+* Write mineral collected/current count every time it changes
+* Write out messages a user types in chat
+* When a unit/building is built write out current army/building composition
+* Write general user info every second. This currently includes:
+  * APM
+  * Average Minerals Stockpiled 
+  * Average Vespene Stockpiled
+  * Mineral Collection Rate
+  * Vespene Collection Rate
+  * Enemy Structures Razed
+  * Enemy Units Killed
+  * Mineral Value of Units Lost 
+  * Total Resource Value of Army
+  * Workers Trained
+  * Workers Lost
+  * Total Overview Score
+  * Supplies Used
+  * ResourceLostAll
+  * Idle Production Time
+  * Combat Efficiency
 
 === In Progress/Coming Soon
-1. When units are given a command, write out command (attack/move) and destination
-2. When a unit/building dies write out write out current army/building composition
-3. When a player moves the camera write out location user is looking at
-4. Write out unit production progress status every second
-5. Write out research progress status every second
+* When units are given a command, write out command (attack/move) and destination
+* When a unit/building dies write out write out current army/building composition
+* When a player moves the camera write out location user is looking at
+* Write out unit production progress status every second
+* Write out research progress status every second
 
 == LICENSE
 Copyright (c) 2013 VORGOM.COM. All rights reserved.
