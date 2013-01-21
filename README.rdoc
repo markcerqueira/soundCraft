@@ -3,48 +3,27 @@
 
 == FILES
 1. *lorkCraftShipyard.SC2Map* - the Antiga Shipyard map (forced cross-spawns at the 5 and 11 o'clock positions) with the custom data-collecting triggers applied to it
-2. *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map (uses FSSM, Nokogiri, and OSC)
+2. *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map and dispatches OSC messages
 3. *audio.ck* - prototype audio synthesizer written in ChucK that receives OSC messages from the bank parser to produce sound 
 
 == DATA FLOW
-User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, research progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of Starcraft 2, but so far the latency does not seem bad. A Ruby script monitors the folder containing the bank files using the File System State Monitor (FSSM) and when those files are modified, the XML files are parsed using Nokogiri and OSC messages are dispatched. Any OSC listener can catch those messages and process them to display data or produce sound.
+User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, research progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of Starcraft 2, but so far the latency does not seem bad given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched using OSC. Any OSC listener can catch those messages and process them to display data or produce sound.
 
 == CUSTOM MAP INFO
 === DATA COLLECTED BY MAP
 1. Write supply every time supply is used/made
 2. Write vespene collected/current count every time it changes
 3. Write mineral collected/current count every time it changes
-4. Write out user chat messages
+4. Write out messages a user types in chat
 5. Write APM to every second
+6. When a unit/building is built write out current army/building composition
 
 === In Progress/Coming Soon
 1. When units are given a command, write out command (attack/move) and destination
-2. When a unit dies write out current unit counts
-3. When a unit is built write out current unit counts
-4. When a player moves the camera write out location user is looking at
-5. Write out unit production progress status every second
-6. Write out research progress status every second
-
-=== BANK LAYOUT
-Minerals Updates (mineralBank)
-* Triggers: player mineral changes
-* Sends: current mineral count, total minerals collected during game
-	
-Vespene Updates (vespeneBank)
-* Triggers: player vespene changes
-* Sends: current vespene count, total vespene collected during game
-		
-Supply Updates (supplyBank)
-* Triggers: player uses up supply or creates more supply
-* Sends: current supplies being used, supplies made
-
-APM Bank (apmBank)
-* Timer: every second
-* Sends: current user apm (player_apm)
-
-Chat Bank (chatBank)
-* Trigger: player sends chat message
-* Sends: string of the message the player sent (chat_string)
+2. When a unit/building dies write out write out current army/building composition
+3. When a player moves the camera write out location user is looking at
+4. Write out unit production progress status every second
+5. Write out research progress status every second
 
 == LICENSE
 Copyright (c) 2013 VORGOM.COM. All rights reserved.
