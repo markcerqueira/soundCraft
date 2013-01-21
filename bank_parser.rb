@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'osc'
-require 'fssm'
+require 'listen'
 
 include OSC
 
@@ -11,6 +11,7 @@ SERVER_PORT = 6449
 
 # path to the folder containing all bank files created by Starcraft 2
 BANK_PATH = '/Users/Mark/Library/Application Support/Blizzard/StarCraft II/Banks'
+POLLING_LATENCY_SECONDS = 0.05;
 
 # given filename identified by bankName, sends all key-value pairs in the bank file via OSC
 def sendBank( bankName )
@@ -37,9 +38,12 @@ def sendBank( bankName )
   puts ""
 end
 
-# File System State Monitor trigger
-FSSM.monitor( BANK_PATH, '**/*') do
-  update {|basePath, bankName| sendBank( bankName ) }
-  delete {|basePath, bankName| sendBank( bankName ) }
-  create {|basePath, bankName| sendBank( bankName ) }
+Listen.to(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true) do |modified, added|
+  String absolutePath = modified.inspect
+  absolutePath = added.inspect if absolutePath.nil?
+
+  absolutePath.gsub!("[\"", "")
+  absolutePath.gsub!("\"]", "")
+
+  sendBank(File.basename(absolutePath))
 end
