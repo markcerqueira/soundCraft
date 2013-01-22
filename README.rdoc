@@ -35,6 +35,7 @@ User data is collected as events occur (e.g. minerals collected, units die) or a
 
 == Todos
 * Timestamp all bank parsing and log info so a playthrough can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
+* Resilient thing that restarts the Ruby script if it fails (in case something goes wrong during the performance)
 * Add support to the custom map to collect:
   * When units are given a command, write out command (attack/move) and destination
   * When a unit/building dies write out write out current army/building composition
