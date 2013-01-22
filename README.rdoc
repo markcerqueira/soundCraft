@@ -9,8 +9,7 @@
 == DATA FLOW
 User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, research progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of Starcraft 2, but so far the latency does not seem bad given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched using OSC. Any OSC listener can catch those messages and process them to display data or produce sound.
 
-== CUSTOM MAP INFO
-=== DATA COLLECTED BY MAP
+== DATA COLLECTED BY MAP
 * Write supply every time supply is used/made
 * Write vespene collected/current count every time it changes
 * Write mineral collected/current count every time it changes
@@ -34,12 +33,15 @@ User data is collected as events occur (e.g. minerals collected, units die) or a
   * Idle Production Time
   * Combat Efficiency
 
-=== In Progress/Coming Soon
-* When units are given a command, write out command (attack/move) and destination
-* When a unit/building dies write out write out current army/building composition
-* When a player moves the camera write out location user is looking at
-* Write out unit production progress status every second
-* Write out research progress status every second
+== Todos
+* Timestamp all bank parsing and log info so a playthrough can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
+* Add support to the custom map to collect:
+  * When units are given a command, write out command (attack/move) and destination
+  * When a unit/building dies write out write out current army/building composition
+  * When a unit/building dies write out the total units lost composition
+  * When a player moves the camera write out location user is looking at
+  * Write out unit production progress status every second
+  * Write out research progress status every second
 
 == LICENSE
 Copyright (c) 2013 VORGOM.COM. All rights reserved.
