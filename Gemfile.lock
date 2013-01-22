@@ -1,0 +1,16 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    gopt (0.0.1)
+    listen (0.7.2)
+    nokogiri (1.5.6)
+    osc (0.1.4)
+      gopt
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  listen (~> 0.7.2)
+  nokogiri (~> 1.5.6)
+  osc (~> 0.1.4)
