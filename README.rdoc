@@ -1,6 +1,12 @@
 = LOrkCraft
 <em>Sonification of a Starcraft 2 Game!</em>
 
+== RUNNING LORKCRAFT
+1. Clone this repository onto your computer.
+2. Run "bundle install" from the root of the directory to get the required gems.
+3. Run "ruby bank_parser.rb" to start the bank parser/OSC dispatcher
+4. Play the LOrkCraft Shipyard map from the Galaxy Editor or from Starcraft 2
+
 == FILES
 1. *lorkCraftShipyard.SC2Map* - the Antiga Shipyard map (forced cross-spawns at the 5 and 11 o'clock positions) with the custom data-collecting triggers applied to it
 2. *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map and dispatches OSC messages
@@ -36,6 +42,7 @@ User data is collected as events occur (e.g. minerals collected, units die) or a
 == Todos
 * Timestamp all bank parsing and log info so a playthrough can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
 * Resilient thing that restarts the Ruby script if it fails (in case something goes wrong during the performance)
+* Check out other Ruby OSC libraries
 * Add support to the custom map to collect:
   * When units are given a command, write out command (attack/move) and destination
   * When a unit/building dies write out write out current army/building composition
