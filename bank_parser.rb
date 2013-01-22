@@ -9,19 +9,24 @@ include OSC
 SERVER_HOST = "localhost"
 SERVER_PORT = 6449
 
-# path to the folder containing all bank files created by Starcraft 2
-BANK_PATH = '/Users/Mark/Library/Application Support/Blizzard/StarCraft II/Banks'
+# when true prints out all data parsed out of XML
+PRINT_DATA = true
+
+# path to the root folder that contains subdirectories that should contain our bank files
+BANK_PATH = File.expand_path('~/Library/Application Support/Blizzard/StarCraft II/')
+
+# polling latency for guard/listen to check for changes to bank files (in seconds)
 POLLING_LATENCY_SECONDS = 0.05;
 
 # given filename identified by bankName, sends all key-value pairs in the bank file via OSC
-def sendBank(bankName)
+def sendBank(absolutePath, bankName)
   # special bank handling functions
   if(bankName == "unitsBuiltBank.SC2Bank")
-    processUnitsBuiltBank(bankName)
+    processUnitsBuiltBank(absolutePath, bankName)
     return
   end
 
-  doc = Nokogiri::XML( open( BANK_PATH + '/' + bankName ) )
+  doc = Nokogiri::XML(open(absolutePath))
   conn = UDPSocket.new
 
   for key in doc.css('Key')
@@ -31,7 +36,7 @@ def sendBank(bankName)
     value = key.css('Value').first['int']
     value = key.css('Value').first['string'] if value.nil?
 
-    puts keyName + ' : ' + value
+    puts keyName + ' : ' + value if PRINT_DATA
 
     if(value.nil?)
       puts "Nil value for key named: " + keyName
@@ -41,11 +46,11 @@ def sendBank(bankName)
     end
   end
 
-  puts ""
+  puts "" if PRINT_DATA
 end
 
-def processUnitsBuiltBank(bankName)
-  doc = Nokogiri::XML( open( BANK_PATH + '/' + bankName ) )
+def processUnitsBuiltBank(absolutePath, bankName)
+  doc = Nokogiri::XML(open(absolutePath))
   conn = UDPSocket.new
 
   # hash to keep track of units, default to 0 so we don't need to check if the unit has already been added
@@ -65,22 +70,22 @@ def processUnitsBuiltBank(bankName)
   end
 
   unitHash.each_pair do |unitName, unitCount|
-    puts "#{unitName} : #{unitCount}"
+    puts "#{unitName} : #{unitCount}" if PRINT_DATA
 
     msg = Message.new( "/lorkCraft/" + bankName, "si", unitName, unitCount )
     conn.send msg.encode, 0, SERVER_HOST, SERVER_PORT
   end
 
-  puts ""
+  puts "" if PRINT_DATA
 end
 
 Listen.to(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true) do |modified, added|
-  String absolutePath = modified.inspect
-  absolutePath = added.inspect if absolutePath.nil?
+  filesChanged = Set.new
 
-  # remove silly characters surrounding the path
-  absolutePath.gsub!("[\"", "")
-  absolutePath.gsub!("\"]", "")
+  # add modified and add files to our set
+  modified.each { |modifiedPath| filesChanged.add(modifiedPath) }
+  added.each { |addedPath| filesChanged.add(addedPath) }
 
-  sendBank(File.basename(absolutePath))
+  # parse banks for each bank file
+  filesChanged.each { |absolutePath| sendBank(absolutePath, File.basename(absolutePath)) }
 end
