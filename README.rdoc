@@ -8,7 +8,7 @@
 4. Play the LOrkCraft Shipyard map from the Galaxy Editor or from Starcraft 2
 
 == FILES
-1. *lorkCraftShipyard.SC2Map* - the Antiga Shipyard map (forced cross-spawns at the 5 and 11 o'clock positions) with the custom data-collecting triggers applied to it
+1. *lorkCraftShipyard.SC2Map* - the Antiga Shipyard map (forced cross-spawns at the 5 and 11 o'clock positions) with the custom data-collecting triggers applied to it; for user focus the bottom-left coordinates are (30, 18) and the top-right coordinates are (138, 146)
 2. *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map and dispatches OSC messages
 3. *audio.ck* - prototype audio synthesizer written in ChucK that receives OSC messages from the bank parser to produce sound 
 
@@ -21,6 +21,7 @@ User data is collected as events occur (e.g. minerals collected, units die) or a
 * Write mineral collected/current count every time it changes
 * Write out messages a user types in chat
 * Write out current unit/building composition when a unit/building is built or dies
+* Write out coordinates where user is focused every second (this is sent as cameraFocusX, cameraFocusY in the general user info blob)
 * Write general user info every second. This currently includes:
   * APM
   * Average Minerals Stockpiled 
@@ -38,15 +39,16 @@ User data is collected as events occur (e.g. minerals collected, units die) or a
   * ResourceLostAll
   * Idle Production Time
   * Combat Efficiency
+  * X, Y coordinate of user's focus
 
 == Todos
 * Timestamp all bank parsing and log info so a playthrough can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
 * Resilient thing that restarts the Ruby script if it fails (in case something goes wrong during the performance)
 * Check out other Ruby OSC libraries
+* Normalize (x, y) coordinates to more natural system
 * Add support to the custom map to collect:
   * When units are given a command, write out command (attack/move) and destination
   * When a unit/building dies write out the total units lost composition
-  * When a player moves the camera write out location user is looking at
   * Write out unit production progress status every second
   * Write out research progress status every second
 

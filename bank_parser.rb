@@ -35,6 +35,7 @@ def sendBank(absolutePath, bankName)
     # parse as int first, then try parsing as string if that doesn't work
     value = key.css('Value').first['int']
     value = key.css('Value').first['string'] if value.nil?
+    value = key.css('Value').first['fixed'] if value.nil?
 
     puts keyName + ' : ' + value if PRINT_DATA
 
