@@ -20,7 +20,7 @@ User data is collected as events occur (e.g. minerals collected, units die) or a
 * Write vespene collected/current count every time it changes
 * Write mineral collected/current count every time it changes
 * Write out messages a user types in chat
-* When a unit/building is built write out current army/building composition
+* Write out current unit/building composition when a unit/building is built or dies
 * Write general user info every second. This currently includes:
   * APM
   * Average Minerals Stockpiled 
@@ -45,7 +45,6 @@ User data is collected as events occur (e.g. minerals collected, units die) or a
 * Check out other Ruby OSC libraries
 * Add support to the custom map to collect:
   * When units are given a command, write out command (attack/move) and destination
-  * When a unit/building dies write out write out current army/building composition
   * When a unit/building dies write out the total units lost composition
   * When a player moves the camera write out location user is looking at
   * Write out unit production progress status every second
