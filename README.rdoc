@@ -1,5 +1,4 @@
-= LOrkCraft
-<em>Sonification of a Starcraft 2 Game!</em>
+= LOrkCraft - <em>Sonification of a Starcraft 2 Game!</em>
 
 == RUNNING LORKCRAFT
 1. Clone this repository onto your computer.
