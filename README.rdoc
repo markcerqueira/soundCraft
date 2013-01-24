@@ -13,7 +13,27 @@
 3. *audio.ck* - prototype audio synthesizer written in ChucK that receives OSC messages from the bank parser to produce sound 
 
 == DATA FLOW
-User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, research progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of Starcraft 2, but so far the latency does not seem bad given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched using OSC. Any OSC listener can catch those messages and process them to display data or produce sound.
+User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, research progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of Starcraft 2, but so far the latency does not seem bad given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched. Any OSC listener can catch those messages and process them to display data or produce sound.
+
+If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent will be printed out. The print statements include the address, tags, and content sent. This should be disabled for live performances, but should be useful while developing. Here is some sample output for reference:
+    /lorkCraft/mineralBank.SC2Bank (ss): total_minerals_collected, 160
+    /lorkCraft/mineralBank.SC2Bank (ss): current_mineral_count, 240
+    /lorkCraft/unitsBuiltBank.SC2Bank (si): Nexus, 1
+    /lorkCraft/unitsBuiltBank.SC2Bank (si): Probe, 8
+    /lorkCraft/scoreBank.SC2Bank (ss): idle_production_time, 16
+    /lorkCraft/scoreBank.SC2Bank (ss): vespene_collection_rate, 0
+    /lorkCraft/scoreBank.SC2Bank (ss): enemy_structures_razed, 0
+    /lorkCraft/scoreBank.SC2Bank (ss): mineral_collection_rate, 280
+    /lorkCraft/scoreBank.SC2Bank (ss): resource_lost_all, 0
+    /lorkCraft/scoreBank.SC2Bank (ss): total_resource_value_of_army, 0
+    /lorkCraft/scoreBank.SC2Bank (ss): total_overview_score, 960
+    /lorkCraft/scoreBank.SC2Bank (ss): workers_trained, 8
+    /lorkCraft/scoreBank.SC2Bank (ss): cameraFocusX, 106.5
+    /lorkCraft/scoreBank.SC2Bank (ss): enemy_units_killed, 0
+    /lorkCraft/scoreBank.SC2Bank (ss): player_apm, 24
+    /lorkCraft/scoreBank.SC2Bank (ss): cameraFocusY, 27.7617
+    /lorkCraft/scoreBank.SC2Bank (ss): average_minerals_stockpiled, 44
+    /lorkCraft/scoreBank.SC2Bank (ss): workers_lost, 0
 
 == DATA COLLECTED BY MAP
 * Write supply every time supply is used/made
@@ -41,10 +61,9 @@ User data is collected as events occur (e.g. minerals collected, units die) or a
   * Combat Efficiency
   * X, Y coordinate of user's focus
 
-== Todos
+== TODOS
 * Timestamp all bank parsing and log info so a playthrough can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
 * Resilient thing that restarts the Ruby script if it fails (in case something goes wrong during the performance)
-* Check out other Ruby OSC libraries
 * Normalize (x, y) coordinates to more natural system
 * Add support to the custom map to collect:
   * When units are given a command, write out command (attack/move) and destination
