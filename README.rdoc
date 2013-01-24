@@ -5,7 +5,8 @@
 1. Clone this repository onto your computer.
 2. Run *bundle* *install* from the root of the directory to get the required gems.
 3. Run *ruby* *bank_parser.rb* to start the bank parser/OSC dispatcher.
-4. Play the LOrkCraft Shipyard map from the Galaxy Editor or from Starcraft 2.
+4. Run any programs that will receive OSC messages (*audio.ck* is a basic ChucK program that receives some messages)
+5. Play the LOrkCraft Shipyard map from the Galaxy Editor or from Starcraft 2.
 
 == FILES
 1. *lorkCraftShipyard.SC2Map* - the Antiga Shipyard map (forced cross-spawns at the 5 and 11 o'clock positions) with the custom data-collecting triggers applied to it; for user focus the bottom-left coordinates are (30, 18) and the top-right coordinates are (138, 146)
