@@ -20,7 +20,7 @@ BANK_PATH = File.expand_path('~/Library/Application Support/Blizzard/StarCraft I
 POLLING_LATENCY_SECONDS = 0.05
 
 # every OSC message is prefixed by this, followed by the bank name
-OSC_MESSAGE_PREFIX = '/lorkCraft/'
+OSC_ADDRESS_PREFIX = '/lorkCraft/'
 
 # given filename identified by bankName, sends all key-value pairs in the bank file via OSC
 def sendBank(absolutePath, bankName)
@@ -31,32 +31,22 @@ def sendBank(absolutePath, bankName)
   end
 
   doc = Nokogiri::XML(open(absolutePath))
-  conn = UDPSocket.new
 
   for key in doc.css('Key')
     keyName = key['name']
 
-    # parse as int first, then try parsing as string if that doesn't work
+    # parse as int first, then try parsing as string, then trying parsing as fixed/floating point
     value = key.css('Value').first['int']
     value = key.css('Value').first['string'] if value.nil?
     value = key.css('Value').first['fixed'] if value.nil?
 
-    if(value.nil?)
-      puts 'Nil value for key named: ' + keyName
-    else
-      msg = Message.new(OSC_MESSAGE_PREFIX + bankName, 'ss', keyName, value)
-      conn.send(msg.encode, 0, SERVER_HOST, SERVER_PORT)
-
-      puts OSC_MESSAGE_PREFIX + bankName + ': ' + keyName + ', ' + value if PRINT_DATA
-    end
+    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, keyName, value)
   end
-
-  puts "" if PRINT_DATA
 end
 
+# special processor function for the unitsBuiltBank
 def processUnitsBuiltBank(absolutePath, bankName)
   doc = Nokogiri::XML(open(absolutePath))
-  conn = UDPSocket.new
 
   # hash to keep track of units, default to 0 so we don't need to check if the unit has already been added
   unitHash = Hash.new
@@ -64,7 +54,7 @@ def processUnitsBuiltBank(absolutePath, bankName)
 
   # construct the hash
   for key in doc.css('Key')
-    # note: we don't care about the "name" here as it's just an arbitrary unique integer
+    # note: we don't care about the "name" here as it's just an arbitrary unique integer written to the bank
 
     unitName = key.css('Value').first['string']
 
@@ -75,13 +65,17 @@ def processUnitsBuiltBank(absolutePath, bankName)
   end
 
   unitHash.each_pair do |unitName, unitCount|
-    msg = Message.new(OSC_MESSAGE_PREFIX + bankName, 'si', unitName, unitCount)
-    conn.send(msg.encode, 0, SERVER_HOST, SERVER_PORT)
-
-    puts OSC_MESSAGE_PREFIX + bankName + ': ' + "#{unitName}, #{unitCount}" if PRINT_DATA
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, unitCount)
   end
+end
 
-  puts "" if PRINT_DATA
+def sendOSCMessage(address, key, value)
+  conn = UDPSocket.new
+
+  msg = Message.new(address, nil, key, value)
+  conn.send(msg.encode, 0, SERVER_HOST, SERVER_PORT)
+
+  puts address + ' (' + msg.tags.gsub!(',', '') + '): ' + "#{key}, #{value}" if PRINT_DATA
 end
 
 Listen.to(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true) do |modified, added|
