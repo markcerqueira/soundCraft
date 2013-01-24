@@ -64,6 +64,7 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
 == TODOS
 * Timestamp all bank parsing and log info so a playthrough can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
 * Resilient thing that restarts the Ruby script if it fails (in case something goes wrong during the performance)
+* OSC tags should more closely match the data type being sent
 * Normalize (x, y) coordinates to more natural system
 * Add support to the custom map to collect:
   * When units are given a command, write out command (attack/move) and destination
