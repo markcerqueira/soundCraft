@@ -22,6 +22,14 @@ POLLING_LATENCY_SECONDS = 0.05
 # every OSC message is prefixed by this, followed by the bank name
 OSC_ADDRESS_PREFIX = '/lorkCraft/'
 
+# used for debug print messages
+START_TIME = Time.now
+
+# helper method to get seconds since program started executing (returned as a float)
+def secondsSinceStart()
+  (Time.now - START_TIME).to_f
+end
+
 # given filename identified by bankName, sends all key-value pairs in the bank file via OSC
 def sendBank(absolutePath, bankName)
   # special bank handling functions
@@ -93,7 +101,7 @@ def sendOSCMessage(address, key, value, valueType)
   msg = Message.new(address, 's' + valueType, key, value)
   conn.send(msg.encode, 0, SERVER_HOST, SERVER_PORT)
 
-  puts address + ' (' + msg.tags.gsub!(',', '') + '): ' + "#{key}, #{value}" if PRINT_DATA
+  puts '%.3f' % secondsSinceStart() + ': ' + address + ' (' + msg.tags.gsub!(',', '') + '): ' + "#{key}, #{value}" if PRINT_DATA
 end
 
 Listen.to(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true) do |modified, added|
