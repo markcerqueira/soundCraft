@@ -42,6 +42,8 @@ def sendBank(absolutePath, bankName)
 
     sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, keyName, value)
   end
+
+  puts '' if PRINT_DATA # makes logs a bit easier to digest
 end
 
 # special processor function for the unitsBuiltBank
@@ -67,6 +69,8 @@ def processUnitsBuiltBank(absolutePath, bankName)
   unitHash.each_pair do |unitName, unitCount|
       sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, unitCount)
   end
+
+  puts '' if PRINT_DATA # makes logs a bit easier to digest
 end
 
 def sendOSCMessage(address, key, value)

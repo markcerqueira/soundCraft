@@ -1,4 +1,4 @@
-= LOrkCraft - <em>Sonification of a Starcraft 2 Game!</em>
+= LOrkCraft - <em>Sonification of a Starcraft 2 Game</em>
 
 == RUNNING LORKCRAFT
 1. Clone this repository onto your computer.
@@ -15,11 +15,13 @@
 == DATA FLOW
 User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, research progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of Starcraft 2, but so far the latency does not seem bad given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched. Any OSC listener can catch those messages and process them to display data or produce sound.
 
-If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent will be printed out. The print statements include the address, tags, and content sent. This should be disabled for live performances, but should be useful while developing. Here is some sample output for reference:
+If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent will be printed out. The print statements include the address, tags, and content sent. A blank line will be printed after an entire XML bank has been parsed. This should be disabled for live performances, but should be useful while developing. Here is some sample output for reference:
     /lorkCraft/mineralBank.SC2Bank (ss): total_minerals_collected, 160
     /lorkCraft/mineralBank.SC2Bank (ss): current_mineral_count, 240
+
     /lorkCraft/unitsBuiltBank.SC2Bank (si): Nexus, 1
     /lorkCraft/unitsBuiltBank.SC2Bank (si): Probe, 8
+
     /lorkCraft/scoreBank.SC2Bank (ss): idle_production_time, 16
     /lorkCraft/scoreBank.SC2Bank (ss): vespene_collection_rate, 0
     /lorkCraft/scoreBank.SC2Bank (ss): enemy_structures_razed, 0
@@ -28,12 +30,17 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
     /lorkCraft/scoreBank.SC2Bank (ss): total_resource_value_of_army, 0
     /lorkCraft/scoreBank.SC2Bank (ss): total_overview_score, 960
     /lorkCraft/scoreBank.SC2Bank (ss): workers_trained, 8
-    /lorkCraft/scoreBank.SC2Bank (ss): cameraFocusX, 106.5
     /lorkCraft/scoreBank.SC2Bank (ss): enemy_units_killed, 0
     /lorkCraft/scoreBank.SC2Bank (ss): player_apm, 24
-    /lorkCraft/scoreBank.SC2Bank (ss): cameraFocusY, 27.7617
     /lorkCraft/scoreBank.SC2Bank (ss): average_minerals_stockpiled, 44
     /lorkCraft/scoreBank.SC2Bank (ss): workers_lost, 0
+
+    /lorkCraft/infoBank.SC2Bank (ss): player_race, Race/Name/Prot
+    /lorkCraft/infoBank.SC2Bank (ss): player_handle, marktronic
+    /lorkCraft/infoBank.SC2Bank (ss): elapsed_time, 60
+
+    /lorkCraft/cameraBank.SC2Bank (ss): cameraFocusX, 76.5
+    /lorkCraft/cameraBank.SC2Bank (ss): cameraFocusY, 9.7617
 
 == DATA COLLECTED BY MAP
 * Write supply every time supply is used/made
@@ -41,7 +48,8 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
 * Write mineral collected/current count every time it changes
 * Write out messages a user types in chat
 * Write out current unit/building composition when a unit/building is built or dies
-* Write out coordinates where user is focused every second (this is sent as cameraFocusX, cameraFocusY in the general user info blob)
+* Write out player handle, player race, current game time every 10 seconds
+* Write out coordinates (x, y) of player's current focus (i.e. where the player is currently focused on the map) every second
 * Write general user info every second. This currently includes:
   * APM
   * Average Minerals Stockpiled 
@@ -59,15 +67,12 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
   * ResourceLostAll
   * Idle Production Time
   * Combat Efficiency
-  * X, Y coordinate of user's focus
 
 == TODOS
 * Timestamp all bank parsing and log info so a play-through can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
 * Resilient thing that restarts the Ruby script if it fails (in case something goes wrong during the performance)
 * OSC tags should more closely match the data type being sent
 * Add support to the custom map to collect:
-  * Write out player handle, player race
-  * Every x seconds, write out current game time
   * When units are given a command, write out command (attack/move) and destination
   * When a unit/building dies write out the total units lost composition
   * Write out unit production progress status every second
