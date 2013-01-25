@@ -37,10 +37,19 @@ def sendBank(absolutePath, bankName)
 
     # parse as int first, then try parsing as string, then trying parsing as fixed/floating point
     value = key.css('Value').first['int']
-    value = key.css('Value').first['string'] if value.nil?
-    value = key.css('Value').first['fixed'] if value.nil?
+    valueType = "i"
 
-    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, keyName, value)
+    if value.nil?
+      value = key.css('Value').first['string'] if value.nil?
+      valueType = "s"
+    end
+
+    if value.nil?
+      value = key.css('Value').first['fixed'] if value.nil?
+      valueType = "f"
+    end
+
+    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, keyName, value, valueType)
   end
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
@@ -67,16 +76,21 @@ def processUnitsBuiltBank(absolutePath, bankName)
   end
 
   unitHash.each_pair do |unitName, unitCount|
-      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, unitCount)
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, unitCount, "i")
   end
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
 end
 
-def sendOSCMessage(address, key, value)
+def sendOSCMessage(address, key, value, valueType)
   conn = UDPSocket.new
 
-  msg = Message.new(address, nil, key, value)
+  # not sure why the OSC pack method does not handle this conversion for us...
+  if valueType == "i"
+    value = Integer(value)
+  end
+
+  msg = Message.new(address, 's' + valueType, key, value)
   conn.send(msg.encode, 0, SERVER_HOST, SERVER_PORT)
 
   puts address + ' (' + msg.tags.gsub!(',', '') + '): ' + "#{key}, #{value}" if PRINT_DATA
