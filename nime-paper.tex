@@ -1,0 +1,78 @@
+% LOrkCraft Submission for NIME 2013 
+%
+% Using the LaTeX Template for NIME 2013
+
+\documentclass{nime-document-class}
+
+\begin{document}
+
+\conferenceinfo{NIME'13,}{May 27 -- 30, 2013, KAIST, Daejeon, Korea.}
+
+% use \projectName{} to refer to the project in the paper
+% makes changing it later much easier - just change it here!
+\newcommand{\projectName}{LOrkCraft}
+
+\title{\projectName{}: Making Music While Playing Starcraft 2}
+
+\numberofauthors{3}
+\author{
+% 1st. author
+\alignauthor
+Mark Cerqueira\\
+       \affaddr{Smule, Inc.}\\
+       \affaddr{577 College Avenue}\\
+       \affaddr{Palo Alto, California}\\
+       \email{mark@smule.com}
+% 2nd. author
+\alignauthor
+Spencer Salazar\\
+       \affaddr{Center for Computer Research in Music and Acoustics (CCRMA)}\\
+       \affaddr{Stanford University}\\
+       \email{spencer@ccrma.stanford.edu}
+% 3rd. author
+\alignauthor
+Ge Wang\\
+       \affaddr{Center for Computer Research in Music and Acoustics (CCRMA)}\\
+       \affaddr{Stanford University}\\
+       \email{ge.stanford.edu}
+}
+
+\maketitle
+\begin{abstract}
+\projectName{} is a collection of utilities that enable real-time data gathering from a Starcraft 2 match to external audio servers via Open Sound Control allowing the match itself to become a live performance piece. This paper details the technical and aesthetic decisions made during the development of \projectName{}, covering which data is collected during the game and discussing the sonic mappings explored.
+\end{abstract}
+
+\keywords{NIME, Starcraft 2, game}
+
+\section{Introduction}
+Introduce Starcraft 2 and the premise for taking game data and making music with it.
+
+\section{Background}
+Talk about background.
+
+\section{Related Work}
+Discuss previous work.
+
+\section{System Overview}
+Describe the system as a whole.
+
+\subsection{Creating the Custom Map}
+The pain of creating a custom map.
+
+\subsection{Parsing and Sending Game Data}
+Ruby script and OSC message format.
+
+\subsection{Sonification of Game Data}
+What we did on the audio end.
+
+\subsection{Conclusion}
+What we want people to do with \projectName{}.
+
+% Acknowledgments are optional
+\section{Acknowledgments}
+We would like to thank Tasteless and Artosis for being awesome.
+
+% Place this command where you want to balance the columns on the last page. 
+% \balancecolumns 
+
+\end{document}
