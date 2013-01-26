@@ -8,9 +8,11 @@
 5. Play the LOrkCraft Shipyard map from the Galaxy Editor or from Starcraft 2.
 
 == FILES
-1. *lorkCraftShipyard.SC2Map* - the Antiga Shipyard map (forced cross-spawns at the 5 and 11 o'clock positions) with the custom data-collecting triggers applied to it; for user focus the bottom-left coordinate is (0, 0) and the top-right coordinate is (108, 128). For reference, Player 1's starting location is (76.5, 9.7617) and Player 2's starting location is (31.5, 114.7578).
-2. *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map and dispatches OSC messages
-3. *audio.ck* - prototype audio synthesizer written in ChucK that receives OSC messages from the bank parser to produce sound 
+* *lorkCraftShipyard.SC2Map* - the Antiga Shipyard map (forced cross-spawns at the 5 and 11 o'clock positions) with the custom data-collecting triggers applied to it; for user focus the bottom-left coordinate is (0, 0) and the top-right coordinate is (108, 128). For reference, Player 1's starting location is (76.5, 9.7617) and Player 2's starting location is (31.5, 114.7578).
+* *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map and dispatches OSC messages
+* *audio.ck* - prototype audio synthesizer written in ChucK that receives OSC messages from the bank parser to produce sound
+* *nime-paper.tex* - short paper submission for LOrkCraft for NIME 2013
+* *nime-performance.tex* - performance submission for LOrkCraft for NIME 2013
 
 == DATA FLOW
 User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, research progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of Starcraft 2, but so far the latency does not seem bad given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched. Any OSC listener can catch those messages and process them to display data or produce sound.
