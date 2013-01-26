@@ -36,6 +36,9 @@ def sendBank(absolutePath, bankName)
   if(bankName == 'unitsBuiltBank.SC2Bank')
     processUnitsBuiltBank(absolutePath, bankName)
     return
+  elsif(bankName == 'productionBank.SC2Bank')
+    processProductionBank(absolutePath, bankName)
+    return
   end
 
   doc = Nokogiri::XML(open(absolutePath))
@@ -90,6 +93,37 @@ def processUnitsBuiltBank(absolutePath, bankName)
   puts '' if PRINT_DATA # makes logs a bit easier to digest
 end
 
+# special processor function for the productionBank
+def processProductionBank(absolutePath, bankName)
+  doc = Nokogiri::XML(open(absolutePath))
+
+  # hash to keep track of progress of units being built
+  unitProgressHash = Hash.new
+  unitProgressHash.default = 0.0;
+
+  # construct the hash getting the unit name and unit progress
+  for key in doc.css('Key')
+    # "name" is a unique integer + Unit/Name/ + name of the unit
+    unitName = key['name']
+    unitName.gsub!('Unit/Name/', '')
+
+    buildProgress = key.css('Value').first['fixed']
+
+    unitProgressHash[unitName] = buildProgress
+  end
+
+  if (unitProgressHash.size > 0)
+    unitProgressHash.each_pair do |unitName, unitBuildProgress|
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, unitBuildProgress, "f")
+    end
+  else
+    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_production', '0.0', "f")
+  end
+
+  puts '' if PRINT_DATA # makes logs a bit easier to digest
+end
+
+# sends OSC message to address with 2 values: key and value. valueType defines value's type for OSC message tags
 def sendOSCMessage(address, key, value, valueType)
   conn = UDPSocket.new
 
@@ -104,13 +138,19 @@ def sendOSCMessage(address, key, value, valueType)
   puts '%.3f' % secondsSinceStart() + ': ' + address + ' (' + msg.tags.gsub!(',', '') + '): ' + "#{key}, #{value}" if PRINT_DATA
 end
 
-Listen.to(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true) do |modified, added|
-  filesChanged = Set.new
+# main file system listener function
+def listenForBankUpdates()
+  Listen.to(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true) do |modified, added|
+    filesChanged = Set.new
 
-  # add modified and add files to our set
-  modified.each { |modifiedPath| filesChanged.add(modifiedPath) }
-  added.each { |addedPath| filesChanged.add(addedPath) }
+    # add modified and add files to our set
+    modified.each { |modifiedPath| filesChanged.add(modifiedPath) }
+    added.each { |addedPath| filesChanged.add(addedPath) }
 
-  # parse banks for each bank file
-  filesChanged.each { |absolutePath| sendBank(absolutePath, File.basename(absolutePath)) }
+    # parse banks for each bank file
+    filesChanged.each { |absolutePath| sendBank(absolutePath, File.basename(absolutePath)) }
+  end
 end
+
+# "main" function - start listening for bank updates!
+listenForBankUpdates()
