@@ -24,6 +24,7 @@
 *.out
 *.synctex.gz
 *.tex.bak
+*.bib.bak
 
 /nime-paper.pdf
 /nime-performance.pdf
