@@ -18,39 +18,44 @@
 User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, unit build progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of Starcraft 2, but so far the latency does not seem bad given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched. Any OSC listener can catch those messages and process them to display data or produce sound.
 
 If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent will be printed out. The print statements include the time in seconds since the program started running, OSC address, tags, and content sent. A blank line will be printed after an entire XML bank has been parsed. Debug print statements be disabled for live performances, but can be useful while developing. Here is some sample output for reference:
-    5.257: /lorkCraft/mineralBank.SC2Bank (si): total_minerals_collected, 160
-    5.257: /lorkCraft/mineralBank.SC2Bank (si): current_mineral_count, 240
+    4.257: /lorkCraft/mineralBank.SC2Bank (si): total_minerals_collected, 160
+    4.257: /lorkCraft/mineralBank.SC2Bank (si): current_mineral_count, 240
 
-    6.412: /lorkCraft/unitsBuiltBank.SC2Bank (si): Nexus, 1
-    6.412: /lorkCraft/unitsBuiltBank.SC2Bank (si): Probe, 8
+    5.412: /lorkCraft/unitsBuiltBank.SC2Bank (si): Nexus, 1
+    5.412: /lorkCraft/unitsBuiltBank.SC2Bank (si): Probe, 8
 
-    8.928: /lorkCraft/scoreBank.SC2Bank (si): idle_production_time, 16
-    8.928: /lorkCraft/scoreBank.SC2Bank (si): vespene_collection_rate, 0
-    8.928: /lorkCraft/scoreBank.SC2Bank (si): enemy_structures_razed, 0
-    8.929: /lorkCraft/scoreBank.SC2Bank (si): mineral_collection_rate, 280
-    8.929: /lorkCraft/scoreBank.SC2Bank (si): resource_lost_all, 0
-    8.929: /lorkCraft/scoreBank.SC2Bank (si): total_resource_value_of_army, 0
-    8.930: /lorkCraft/scoreBank.SC2Bank (si): total_overview_score, 960
-    8.930: /lorkCraft/scoreBank.SC2Bank (si): workers_trained, 8
-    8.930: /lorkCraft/scoreBank.SC2Bank (si): enemy_units_killed, 0
-    8.930: /lorkCraft/scoreBank.SC2Bank (si): player_apm, 24
-    8.931: /lorkCraft/scoreBank.SC2Bank (si): average_minerals_stockpiled, 44
-    8.931: /lorkCraft/scoreBank.SC2Bank (si): workers_lost, 0
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 0-Pylon, 7.5195
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 0-Pylon, 7.5195
 
-    9.010: /lorkCraft/infoBank.SC2Bank (ss): player_race, Race/Name/Prot
-    9.010: /lorkCraft/infoBank.SC2Bank (ss): player_handle, marktronic
-    9.010: /lorkCraft/infoBank.SC2Bank (sf): elapsed_time, 60
+    7.928: /lorkCraft/scoreBank.SC2Bank (si): idle_production_time, 16
+    7.928: /lorkCraft/scoreBank.SC2Bank (si): vespene_collection_rate, 0
+    7.928: /lorkCraft/scoreBank.SC2Bank (si): enemy_structures_razed, 0
+    7.929: /lorkCraft/scoreBank.SC2Bank (si): mineral_collection_rate, 280
+    7.929: /lorkCraft/scoreBank.SC2Bank (si): resource_lost_all, 0
+    7.929: /lorkCraft/scoreBank.SC2Bank (si): total_resource_value_of_army, 0
+    7.930: /lorkCraft/scoreBank.SC2Bank (si): total_overview_score, 960
+    7.930: /lorkCraft/scoreBank.SC2Bank (si): workers_trained, 8
+    7.930: /lorkCraft/scoreBank.SC2Bank (si): enemy_units_killed, 0
+    7.930: /lorkCraft/scoreBank.SC2Bank (si): player_apm, 24
+    7.931: /lorkCraft/scoreBank.SC2Bank (si): average_minerals_stockpiled, 44
+    7.931: /lorkCraft/scoreBank.SC2Bank (si): workers_lost, 0
 
-    9.236: /lorkCraft/productionBank.SC2Bank (sf): 1-Marine, 95.0195
-    9.236: /lorkCraft/productionBank.SC2Bank (sf): 0-SCV, 72.0703
-    9.237: /lorkCraft/productionBank.SC2Bank (sf): 2-Marine, 95.752
+    8.947: /lorkCraft/buildingProductionBank.SC2Bank (sf): no__structure_production, 0.0
+
+    8.010: /lorkCraft/infoBank.SC2Bank (ss): player_race, Race/Name/Prot
+    8.010: /lorkCraft/infoBank.SC2Bank (ss): player_handle, marktronic
+    8.010: /lorkCraft/infoBank.SC2Bank (sf): elapsed_time, 60
+
+    9.236: /lorkCraft/unitProductionBank.SC2Bank (sf): 1-Zealot, 95.0195
+    9.236: /lorkCraft/unitProductionBank.SC2Bank (sf): 0-Probe, 72.0703
+    9.237: /lorkCraft/unitProductionBank.SC2Bank (sf): 2-Stalker, 95.752
 
     9.419: /lorkCraft/cameraBank.SC2Bank (sf): cameraFocusX, 76.5
     9.419: /lorkCraft/cameraBank.SC2Bank (sf): cameraFocusY, 9.7617
 
-    9.583: /lorkCraft/productionBank.SC2Bank (sf): 0-SCV, 83.838
+    9.583: /lorkCraft/unitProductionBank.SC2Bank (sf): 0-Probe, 83.838
 
-    9.947: /lorkCraft/productionBank.SC2Bank (sf): no_production, 0.0
+    9.947: /lorkCraft/unitProductionBank.SC2Bank (sf): no__unit_production, 0.0
 
 == DATA COLLECTED BY MAP
 * Write supply every time supply is used/made
@@ -60,7 +65,8 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
 * Write out current unit/building composition when a unit/building is built or dies
 * Write out player handle, player race, current game time every 10 seconds
 * Write out coordinates (x, y) of player's current focus (i.e. where the player is currently focused on the map) every second
-* Write out unit production status every second (a special *no_production* message is sent when no units are being produced)
+* Write out unit production status every second (a special *no_unit_production* message is sent when no units are being produced)
+* Write out structure production status every second (a special *no_structure_production* message is sent when no structures are being built)
 * Write general user info every second. This currently includes:
   * APM
   * Average Minerals Stockpiled 

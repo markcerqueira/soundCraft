@@ -36,7 +36,7 @@ def sendBank(absolutePath, bankName)
   if(bankName == 'unitsBuiltBank.SC2Bank')
     processUnitsBuiltBank(absolutePath, bankName)
     return
-  elsif(bankName == 'productionBank.SC2Bank')
+  elsif(bankName == 'unitProductionBank.SC2Bank' or bankName == 'buildingProductionBank.SC2Bank')
     processProductionBank(absolutePath, bankName)
     return
   end
@@ -93,31 +93,35 @@ def processUnitsBuiltBank(absolutePath, bankName)
   puts '' if PRINT_DATA # makes logs a bit easier to digest
 end
 
-# special processor function for the productionBank
+# special processor function for the units and building production banks
 def processProductionBank(absolutePath, bankName)
   doc = Nokogiri::XML(open(absolutePath))
 
-  # hash to keep track of progress of units being built
-  unitProgressHash = Hash.new
-  unitProgressHash.default = 0.0;
+  # hash to keep track of progress of units/buildings being built
+  productionProgressHash = Hash.new
+  productionProgressHash.default = 0.0;
 
-  # construct the hash getting the unit name and unit progress
+  # construct the hash getting the unit/building name and build progress
   for key in doc.css('Key')
-    # "name" is a unique integer + Unit/Name/ + name of the unit
+    # "name" is a unique integer + Unit/Name/ + name of the unit/building
     unitName = key['name']
     unitName.gsub!('Unit/Name/', '')
 
     buildProgress = key.css('Value').first['fixed']
 
-    unitProgressHash[unitName] = buildProgress
+    productionProgressHash[unitName] = buildProgress
   end
 
-  if (unitProgressHash.size > 0)
-    unitProgressHash.each_pair do |unitName, unitBuildProgress|
-      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, unitBuildProgress, "f")
+  if (productionProgressHash.size > 0)
+    productionProgressHash.each_pair do |name, buildProgress|
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, buildProgress, "f")
     end
   else
-    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_production', '0.0', "f")
+    if (bankName == 'unitProductionBank.SC2Bank')
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_unit_production', '0.0', "f")
+    else
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_structure_production', '0.0', "f")
+    end
   end
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
