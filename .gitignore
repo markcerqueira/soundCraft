@@ -23,4 +23,7 @@
 *.mtc1
 *.out
 *.synctex.gz
+*.tex.bak
+
 /nime-paper.pdf
+/nime-performance.pdf
