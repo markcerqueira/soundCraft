@@ -1,5 +1,6 @@
 .DS_Store
 .idea
+
 *.aux
 *.glo
 *.idx
@@ -23,8 +24,7 @@
 *.mtc1
 *.out
 *.synctex.gz
-*.tex.bak
-*.bib.bak
+*.bak
 
 /nime-paper.pdf
 /nime-performance.pdf

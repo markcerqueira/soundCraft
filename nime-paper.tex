@@ -34,7 +34,7 @@ Spencer Salazar\\
 Ge Wang\\
        \affaddr{Center for Computer Research in Music and Acoustics (CCRMA)}\\
        \affaddr{Stanford University}\\
-       \email{ge.stanford.edu}
+       \email{ge@ccrma.stanford.edu}
 }
 
 \maketitle
@@ -56,12 +56,12 @@ In its realization, \projectName{} seeks to unravel the layers of nuance in a wi
 
 \section{Background}
 \projectName{} centers around the widely popular RTS or "real-time strategy" video game series {\em StarCraft 2} by Blizzard Entertainment~\cite{Blizzard:2013:Online}.
-In {\em StarCraft 2}, players can control one of three distinct races: the Terrans, humans who were exiled from Earth long ago; the Zerg, an insect-like alien species obsessed with overrunning and assimilating other species; and the Protoss, a humanoid species with advanced technology and great psionic abilities seeking to annihilate the Zerg~\cite{BlizzardRaces:2013:Online}.
+In {\em StarCraft 2}, players can control one of three distinct races: the Terran, humans who were exiled from Earth long ago; the Zerg, an insect-like alien species obsessed with overrunning and assimilating other species; and the Protoss, a humanoid species with highly advanced technology and great psionic abilities seeking to annihilate the Zerg~\cite{BlizzardRaces:2013:Online}.
 While the game features a story-driven campaign mode, most StarCraft players spend their time on the ladder, battling out against other players over the internet. 
 
 During a match, players see the action from a top-down perspective and only have vision of the map where they have units or buildings present.
 Players switch between building up their economy by constructing workers that collect resources or building an army to attempt to do damage to their enemy.
-A player who is able to build a strong economy and the proper number and composition of units that counter their opponent's units will be in an advantageous position.
+A player who is able to build a strong economy and the proper composition of units that counter their opponent's units will be in an advantageous position.
 The game ends when a player destroys the other player's structures or the other player surrenders.
 
 \section{Related Work}
@@ -94,30 +94,33 @@ The map created for \projectName{} is for two players, but the triggers can be s
 
 Data collected during the game focuses on player actions and current state of the player's army.
 Tracked data includes:
-\begin{itemize} \itemsep1pt \parskip0pt \parsep0pt
+\begin{itemize} \itemsep2pt \parskip0pt \parsep0pt
   \item The player's race (i.e. Terran, Protoss, or Zerg)
   \item Coordinates where a player is currently focused on the map
   \item Composition of the player's standing army
-  \item Units being produced by the player and their current build progress
+  \item Units and structures being produced by the player and their current build progress
   \item The player's effective actions per minute (APM)
   \item Various metrics about a player's economic health including mineral and vespene gas collection rate as well as harvesters built and lost
-  \item Total number of enemy units destroyed and structures razed
+  \item Total number of enemy units destroyed and enemy structures razed
   \item A notification when a player surrenders or leaves the game
+  \item Any messages a user types in the in-game chat
   \item The player's general {\em score} that combines all these factors to produce a single number that is normally a good indicator of performance (this is typically only shown after a match has ended)
 \end{itemize}
 
 \subsection{Parsing and Sending Game Data}
-A Ruby script monitors the directories that contain these bank files using guard/listen and when the files are updated, the data is parsed out of the XML bank files using Nokogiri and that data is sent to any listening OSC clients on designed IP and port addresses. Via IP address designation, this data can be kept local to the player who is producing the data or it can be shared with all other players. 
-Unfortunately, this is the only {\em legitimate} way to get data out of Starcraft 2, but we found the latency between a trigger being fired and an OSC client receiving the message to be acceptable given we had fine control over how often our script polls the file system for bank file updates.
-With operating system-specific file system polling adapters, the overhead of writing to a file, catching that event and parsing the data out became negligible in tests.
+A Ruby script monitors the directories that contain these bank files using guard/listen and when the files are updated, the data is parsed out of the XML bank files using Nokogiri~\cite{Nokogiri:Online} and that data is sent to any listening OSC~\cite{OSC:Online} clients on designed IP and port addresses. Via IP address designation, this data can be kept local to the player who is producing the data or it can be shared with all other players. 
+Unfortunately, this is the only {\em legitimate} way to get data out of Starcraft 2, but we found the latency between a trigger firing and an OSC client receiving the relevant message to be acceptable given we had fine control over how often our script polls the file system for bank file updates.
+With operating system-specific file system polling adapters, the overhead of writing to a file, catching that event and parsing the data out became negligible in trial runs.
 
-\subsection{Sonification of Game Data}
+\section{Sonification of Game Data}
 {\bf What we did with the OSC messages.}
 Note that the aim of \projectName{} is not to define how this game data should be mapped, but to open communication between the game and any external modules that will respond to actions and events in the game.
 Our interpretation of the data at the audio layer should certainly not be viewed as the proper or correct way to interpret the data, but merely as one instance of what can be done with the data.  
 
-\subsection{Conclusion}
-{\bf What we want people to do with \projectName{}.}
+\section{Conclusion}
+The sonic mappings explored here are but one of many.
+With no StarCraft game ever being the same as another and the widespread implementation of OSC in various languages, \projectName{} provides a rich platform for diversity and expression through a game of StarCraft.
+To facilitate this, the source code for \projectName{} as well as documentation and media is maintained on GitHub~\cite{LOrkCraft:Online}. 
 
 % Acknowledgments are optional
 \section{Acknowledgments}
