@@ -26,5 +26,5 @@
 *.synctex.gz
 *.bak
 
-/nime-paper.pdf
-/nime-performance.pdf
+*/nime-paper.pdf
+*/nime-performance.pdf
