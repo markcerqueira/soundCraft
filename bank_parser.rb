@@ -40,6 +40,9 @@ def sendBank(absolutePath, bankName)
   if(bankName == 'unitsBuiltBank.SC2Bank')
     processUnitsBuiltBank(absolutePath, bankName)
     return
+  elsif(bankName == 'abilitiesUsedBank.SC2Bank')
+    processAbilityUsedBank(absolutePath, bankName)
+    return
   elsif(bankName == 'unitProductionBank.SC2Bank' or bankName == 'buildingProductionBank.SC2Bank')
     processProductionBank(absolutePath, bankName)
     return
@@ -65,6 +68,24 @@ def sendBank(absolutePath, bankName)
     end
 
     sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, keyName, value, valueType)
+  end
+
+  puts '' if PRINT_DATA # makes logs a bit easier to digest
+end
+
+# special processor for abilities used bank
+def processAbilityUsedBank(absolutePath, bankName)
+  doc = Nokogiri::XML(open(absolutePath))
+
+  for key in doc.css('Key')
+    unitName = key['name']
+
+    abilityUsed = key.css('Value').first['string']
+
+    # remove the common prefix from the unit name passed
+    unitName.gsub!('Unit/Name/', '')
+
+    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, abilityUsed, "s")
   end
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest

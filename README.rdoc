@@ -50,6 +50,8 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
     7.931: /lorkCraft/scoreBank.SC2Bank (si): average_minerals_stockpiled, 44
     7.931: /lorkCraft/scoreBank.SC2Bank (si): workers_lost, 0
 
+    8.260: /lorkCraft/abilitiesUsedBank.SC2Bank (ss): Queen, SpawnLarva
+
     8.947: /lorkCraft/buildingProductionBank.SC2Bank (sf): no__structure_production, 0.0
 
     8.010: /lorkCraft/infoBank.SC2Bank (ss): player_race, Race/Name/Prot
@@ -72,6 +74,7 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
 * Write vespene collected/current count every time it changes
 * Write mineral collected/current count every time it changes
 * Write out messages a user types in chat
+* Write out abilities used by units
 * Write out current unit/building composition when a unit/building is built or dies
 * Write out player handle, player race, current game time every 10 seconds
 * Write out coordinates (x, y) of player's current focus (i.e. where the player is currently focused on the map) every second
@@ -98,6 +101,7 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
 == TODOS
 * Timestamp all bank parsing and log info so a play-through can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
 * Resilient thing that restarts the Ruby script if it fails (in case something goes wrong during the performance)
+* Camera focus should send info in (ff) format
 * Add support to the custom map to collect:
   * When units are given a command, write out command (attack/move) and destination
   * When a unit dies write out the total units lost composition
