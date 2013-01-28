@@ -23,8 +23,19 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
     5.412: /lorkCraft/unitsBuiltBank.SC2Bank (si): Nexus, 1
     5.412: /lorkCraft/unitsBuiltBank.SC2Bank (si): Probe, 8
 
-    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 0-Pylon, 7.5195
-    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 0-Pylon, 7.5195
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 1-Pylon, 22.2646
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 5-Gateway, 96.5087
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 6-Pylon, 47.5097
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 4-Gateway, 83.252
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 7-Gateway, 59.253
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 2-Pylon, 28.2714
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 0-Gateway, 15.7714
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 3-Pylon, 38.501
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (sf): 8-CyberneticsCore, 70.2636
+
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (si): Gateway, 4
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (si): Pylon, 4
+    6.438: /lorkCraft/buildingProductionBank.SC2Bank (si): CyberneticsCore, 1
 
     7.928: /lorkCraft/scoreBank.SC2Bank (si): idle_production_time, 16
     7.928: /lorkCraft/scoreBank.SC2Bank (si): vespene_collection_rate, 0

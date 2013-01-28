@@ -116,6 +116,25 @@ def processProductionBank(absolutePath, bankName)
     productionProgressHash.each_pair do |name, buildProgress|
       sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, buildProgress, "f")
     end
+
+    puts '' if PRINT_DATA # makes logs a bit easier to digest
+
+    # then aggregate the data and send that instead
+    aggregateProductionHash = Hash.new
+    aggregateProductionHash.default = 0;
+
+    productionProgressHash.each_pair do |name, buildProgress|
+      #  '1-Pylon' to just 'Pylon'
+      nameWithoutId = name.gsub(/.*?(?=-)/im, '').gsub('-', '')
+
+      aggregateProductionHash[nameWithoutId] = aggregateProductionHash[nameWithoutId] + 1
+
+      puts '' if PRINT_DATA # makes logs a bit easier to digest
+    end
+
+    aggregateProductionHash.each_pair do |name, count|
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, count, "i")
+    end
   else
     if (bankName == 'unitProductionBank.SC2Bank')
       sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_unit_production', '0.0', "f")
