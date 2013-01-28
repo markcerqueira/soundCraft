@@ -6,9 +6,13 @@ require 'osc'
 
 include OSC
 
-# OSC receiver address/port
-SERVER_HOST = 'localhost'
-SERVER_PORT = 6449
+# global scope - OSC destination address/port
+$serverHost
+$serverPort
+
+# global scope hash so when units/buildings complete we can indicate that to listeners by sending a 0 for the count
+# e.g. when a Spawning Pool finishes, we will continue to send 'Spawning Pool', 0
+$aggregateProductionHash = Hash.new()
 
 # when true prints out all data parsed out of XML
 PRINT_DATA = true
@@ -24,10 +28,6 @@ OSC_ADDRESS_PREFIX = '/lorkCraft/'
 
 # used for debug print messages
 START_TIME = Time.now
-
-# global scope hash so when units/buildings complete we can indicate that to listeners by sending a 0 for the count
-# e.g. when a Spawning Pool finishes, we will continue to send 'Spawning Pool', 0
-$aggregateProductionHash = Hash.new()
 
 # helper method to get seconds since program started executing (returned as a float)
 def secondsSinceStart()
@@ -76,6 +76,7 @@ def sendBank(absolutePath, bankName)
   puts '' if PRINT_DATA # makes logs a bit easier to digest
 end
 
+# special processor for camera bank
 def processCameraFocusBank(absolutePath, bankName)
   doc = Nokogiri::XML(open(absolutePath))
 
@@ -98,7 +99,6 @@ def processCameraFocusBank(absolutePath, bankName)
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
 end
-
 
 # special processor for abilities used bank
 def processAbilityUsedBank(absolutePath, bankName)
@@ -213,7 +213,10 @@ def sendOSCMessage(address, key, keyType, value, valueType)
   end
 
   msg = Message.new(address, keyType + valueType, key, value)
-  conn.send(msg.encode, 0, SERVER_HOST, SERVER_PORT)
+  conn.send(msg.encode, 0, $serverHost, $serverPort)
+
+  puts $serverHost
+  puts $serverPort
 
   puts '%.3f' % secondsSinceStart() + ': ' + address + ' (' + msg.tags.gsub!(',', '') + '): ' + "#{key}, #{value}" if PRINT_DATA
 end
@@ -232,7 +235,19 @@ def listenForBankUpdates()
   end
 end
 
-# "main" function - start listening for bank updates!
+#
+# "main" function
+#
+
+# quit unless our script gets the OSC destination address and port
+unless ARGV.length == 2
+  puts "USAGE: ruby bank_parser.rb OSCDestinationAddress OSCDestinationPort\n"
+  exit
+end
+
+$serverHost = ARGV[0]
+$serverPort = ARGV[1]
+
 $aggregateProductionHash.default = 0;
 
 listenForBankUpdates()
