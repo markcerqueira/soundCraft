@@ -70,7 +70,7 @@ def sendBank(absolutePath, bankName)
       valueType = "f"
     end
 
-    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, keyName, value, valueType)
+    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, keyName, 's', value, valueType)
   end
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
@@ -112,7 +112,7 @@ def processAbilityUsedBank(absolutePath, bankName)
     # remove the common prefix from the unit name passed
     unitName.gsub!('Unit/Name/', '')
 
-    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, abilityUsed, "s")
+    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, 's', abilityUsed, 's')
   end
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
@@ -139,7 +139,7 @@ def processUnitsBuiltBank(absolutePath, bankName)
   end
 
   unitHash.each_pair do |unitName, unitCount|
-      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, unitCount, "i")
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, unitName, 's', unitCount, 'i')
   end
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
@@ -172,7 +172,7 @@ def processProductionBank(absolutePath, bankName)
 
   if (productionProgressHash.size > 0)
     productionProgressHash.each_pair do |name, buildProgress|
-      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, buildProgress, "f")
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, 's', buildProgress, 'f')
 
       # after sending the build progress for this unit/building, increment the number of units/buildings of this type
       # being tracked in the aggregate production hash
@@ -183,23 +183,18 @@ def processProductionBank(absolutePath, bankName)
     puts '' if PRINT_DATA # makes logs a bit easier to digest
   else
     if (bankName == 'unitProductionBank.SC2Bank')
-      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_unit_production', '0.0', "f")
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_unit_production', 's', '0.0', 'f')
     else
-      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_structure_production', '0.0', "f")
+      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_structure_production', 's', '0.0', 'f')
     end
   end
 
   # now send our aggregate production data
   $aggregateProductionHash.each_pair do |name, count|
-    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, count, "i")
+    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, 's', count, 'i')
   end
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
-end
-
-# sends OSC message
-def sendOSCMessage(address, key, value, valueType)
-  sendOSCMessage(address, key, 's', value, valueType)
 end
 
 # sends OSC message to address with 2 values: key and value. valueType defines value's type for OSC message tags; and
@@ -208,15 +203,12 @@ def sendOSCMessage(address, key, keyType, value, valueType)
   conn = UDPSocket.new
 
   # not sure why the OSC pack method does not handle this conversion for us...
-  if valueType == "i"
+  if valueType == 'i'
     value = Integer(value)
   end
 
   msg = Message.new(address, keyType + valueType, key, value)
   conn.send(msg.encode, 0, $serverHost, $serverPort)
-
-  puts $serverHost
-  puts $serverPort
 
   puts '%.3f' % secondsSinceStart() + ': ' + address + ' (' + msg.tags.gsub!(',', '') + '): ' + "#{key}, #{value}" if PRINT_DATA
 end
