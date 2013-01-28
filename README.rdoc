@@ -77,6 +77,7 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
 * Write out abilities used by units
 * Write out current unit/building composition when a unit/building is built or dies
 * Write out player handle, player race, current game time every 10 seconds
+* Write out total upgrades researched when a player completes a research item
 * Write out coordinates (x, y) of player's current focus (i.e. where the player is currently focused on the map) every second
 * Write out unit production status every second (a special *no_unit_production* message is sent when no units are being produced)
 * Write out structure production status every second (a special *no_structure_production* message is sent when no structures are being built)
@@ -97,11 +98,14 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
   * ResourceLostAll
   * Idle Production Time
   * Combat Efficiency
+  * Units Lost
+  * Structures Lost
+  * Weapons Upgrades Completed
+  * Armor Upgrades Completed
 
 == TODOS
 * Timestamp all bank parsing and log info so a play-through can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
 * Resilient thing that restarts the Ruby script if it fails (in case something goes wrong during the performance)
-* Camera focus should send info in (ff) format
 * Add support to the custom map to collect:
   * When units are given a command, write out command (attack/move) and destination
   * When a unit dies write out the total units lost composition

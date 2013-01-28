@@ -43,6 +43,9 @@ def sendBank(absolutePath, bankName)
   elsif(bankName == 'abilitiesUsedBank.SC2Bank')
     processAbilityUsedBank(absolutePath, bankName)
     return
+  elsif(bankName == 'cameraBank.SC2Bank')
+    processCameraFocusBank(absolutePath, bankName)
+    return
   elsif(bankName == 'unitProductionBank.SC2Bank' or bankName == 'buildingProductionBank.SC2Bank')
     processProductionBank(absolutePath, bankName)
     return
@@ -72,6 +75,30 @@ def sendBank(absolutePath, bankName)
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
 end
+
+def processCameraFocusBank(absolutePath, bankName)
+  doc = Nokogiri::XML(open(absolutePath))
+
+  xCoor = -1.0;
+  yCoor = -1.0;
+
+  for key in doc.css('Key')
+    keyName = key['name']
+
+    if(keyName == 'cameraFocusX')
+       xCoor = key.css('Value').first['fixed']
+    elsif(keyName == 'cameraFocusY')
+      yCoor = key.css('Value').first['fixed']
+    else
+      puts "ERROR: unexpected name in XML: #{keyName}"
+    end
+  end
+
+  sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, xCoor, 'f', yCoor, 'f')
+
+  puts '' if PRINT_DATA # makes logs a bit easier to digest
+end
+
 
 # special processor for abilities used bank
 def processAbilityUsedBank(absolutePath, bankName)
@@ -170,8 +197,14 @@ def processProductionBank(absolutePath, bankName)
   puts '' if PRINT_DATA # makes logs a bit easier to digest
 end
 
-# sends OSC message to address with 2 values: key and value. valueType defines value's type for OSC message tags
+# sends OSC message
 def sendOSCMessage(address, key, value, valueType)
+  sendOSCMessage(address, key, 's', value, valueType)
+end
+
+# sends OSC message to address with 2 values: key and value. valueType defines value's type for OSC message tags; and
+# keyType defines key's type
+def sendOSCMessage(address, key, keyType, value, valueType)
   conn = UDPSocket.new
 
   # not sure why the OSC pack method does not handle this conversion for us...
@@ -179,7 +212,7 @@ def sendOSCMessage(address, key, value, valueType)
     value = Integer(value)
   end
 
-  msg = Message.new(address, 's' + valueType, key, value)
+  msg = Message.new(address, keyType + valueType, key, value)
   conn.send(msg.encode, 0, SERVER_HOST, SERVER_PORT)
 
   puts '%.3f' % secondsSinceStart() + ': ' + address + ' (' + msg.tags.gsub!(',', '') + '): ' + "#{key}, #{value}" if PRINT_DATA
