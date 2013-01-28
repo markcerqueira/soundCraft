@@ -25,6 +25,10 @@ OSC_ADDRESS_PREFIX = '/lorkCraft/'
 # used for debug print messages
 START_TIME = Time.now
 
+# global scope hash so when units/buildings complete we can indicate that to listeners by sending a 0 for the count
+# e.g. when a Spawning Pool finishes, we will continue to send 'Spawning Pool', 0
+$aggregateProductionHash = Hash.new()
+
 # helper method to get seconds since program started executing (returned as a float)
 def secondsSinceStart()
   (Time.now - START_TIME).to_f
@@ -112,35 +116,34 @@ def processProductionBank(absolutePath, bankName)
     productionProgressHash[unitName] = buildProgress
   end
 
+  # clear the aggregateProductionHash before we check on what's still building
+  # things that were previously building but no longer building will be accurately reported as "0" in progress with this
+  $aggregateProductionHash.each_pair do |name, count|
+    $aggregateProductionHash[name] = 0
+  end
+
   if (productionProgressHash.size > 0)
     productionProgressHash.each_pair do |name, buildProgress|
       sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, buildProgress, "f")
+
+      # after sending the build progress for this unit/building, increment the number of units/buildings of this type
+      # being tracked in the aggregate production hash
+      nameWithoutId = name.gsub(/.*?(?=-)/im, '').gsub('-', '') # '1-Pylon' to just 'Pylon'
+      $aggregateProductionHash[nameWithoutId] = $aggregateProductionHash[nameWithoutId] + 1
     end
 
     puts '' if PRINT_DATA # makes logs a bit easier to digest
-
-    # then aggregate the data and send that instead
-    aggregateProductionHash = Hash.new
-    aggregateProductionHash.default = 0;
-
-    productionProgressHash.each_pair do |name, buildProgress|
-      #  '1-Pylon' to just 'Pylon'
-      nameWithoutId = name.gsub(/.*?(?=-)/im, '').gsub('-', '')
-
-      aggregateProductionHash[nameWithoutId] = aggregateProductionHash[nameWithoutId] + 1
-
-      puts '' if PRINT_DATA # makes logs a bit easier to digest
-    end
-
-    aggregateProductionHash.each_pair do |name, count|
-      sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, count, "i")
-    end
   else
     if (bankName == 'unitProductionBank.SC2Bank')
       sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_unit_production', '0.0', "f")
     else
       sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, 'no_structure_production', '0.0', "f")
     end
+  end
+
+  # now send our aggregate production data
+  $aggregateProductionHash.each_pair do |name, count|
+    sendOSCMessage(OSC_ADDRESS_PREFIX + bankName, name, count, "i")
   end
 
   puts '' if PRINT_DATA # makes logs a bit easier to digest
@@ -176,4 +179,6 @@ def listenForBankUpdates()
 end
 
 # "main" function - start listening for bank updates!
+$aggregateProductionHash.default = 0;
+
 listenForBankUpdates()
