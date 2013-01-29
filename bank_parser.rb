@@ -251,8 +251,13 @@ def listenForBankUpdates()
     modified.each { |modifiedPath| filesChanged.add(modifiedPath) }
     added.each { |addedPath| filesChanged.add(addedPath) }
 
-    # parse banks for each bank file
-    filesChanged.each { |absolutePath| sendBank(absolutePath, File.basename(absolutePath)) }
+    begin
+      # parse banks for each bank file
+      filesChanged.each { |absolutePath| sendBank(absolutePath, File.basename(absolutePath)) }
+    rescue Exception => e
+      # handle e
+      puts "ERROR: exception caught"
+    end
   end
 end
 
