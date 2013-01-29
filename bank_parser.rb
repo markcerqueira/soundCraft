@@ -56,17 +56,23 @@ def sendBank(absolutePath, bankName)
   for key in doc.css('Key')
     keyName = key['name']
 
+    keyValue = key.css('Value')
+
+    if(keyValue == nil)
+      next
+    end
+
     # parse as int first, then try parsing as string, then trying parsing as fixed/floating point
-    value = key.css('Value').first['int']
+    value = keyValue.first['int']
     valueType = "i"
 
     if value.nil?
-      value = key.css('Value').first['string'] if value.nil?
+      value = keyValue.first['string'] if value.nil?
       valueType = "s"
     end
 
     if value.nil?
-      value = key.css('Value').first['fixed'] if value.nil?
+      value = keyValue.first['fixed'] if value.nil?
       valueType = "f"
     end
 
@@ -86,10 +92,16 @@ def processCameraFocusBank(absolutePath, bankName)
   for key in doc.css('Key')
     keyName = key['name']
 
+    keyValue = key.css('Value')
+
+    if(keyValue == nil)
+      next
+    end
+
     if(keyName == 'cameraFocusX')
-       xCoor = key.css('Value').first['fixed']
+       xCoor = keyValue.first['fixed']
     elsif(keyName == 'cameraFocusY')
-      yCoor = key.css('Value').first['fixed']
+      yCoor = keyValue.first['fixed']
     else
       puts "ERROR: unexpected name in XML: #{keyName}"
     end
@@ -107,7 +119,13 @@ def processAbilityUsedBank(absolutePath, bankName)
   for key in doc.css('Key')
     unitName = key['name']
 
-    abilityUsed = key.css('Value').first['string']
+    keyValue = key.css('Value')
+
+    if(keyValue == nil)
+      next
+    end
+
+    abilityUsed = keyValue.first['string']
 
     # remove the common prefix from the unit name passed
     unitName.gsub!('Unit/Name/', '')
@@ -129,8 +147,13 @@ def processUnitsBuiltBank(absolutePath, bankName)
   # construct the hash
   for key in doc.css('Key')
     # note: we don't care about the "name" here as it's just an arbitrary unique integer written to the bank
+    keyValue = key.css('Value')
 
-    unitName = key.css('Value').first['string']
+    if(keyValue == nil)
+      next
+    end
+
+    unitName = keyValue.first['string']
 
     # remove the common prefix from the unit name passed
     unitName.gsub!('Unit/Name/', '')
@@ -159,7 +182,13 @@ def processProductionBank(absolutePath, bankName)
     unitName = key['name']
     unitName.gsub!('Unit/Name/', '')
 
-    buildProgress = key.css('Value').first['fixed']
+    keyValue = key.css('Value')
+
+    if(keyValue == nil)
+      next
+    end
+
+    buildProgress = keyValue.first['fixed']
 
     productionProgressHash[unitName] = buildProgress
   end
