@@ -1,14 +1,14 @@
-= sco2sc - <em>Framework for Transducing a StarCraft 2 Game</em>
+= SoundCraft - <em>Framework for Transducing a StarCraft 2 Game</em>
 
-== RUNNING LORKCRAFT
+== RUNNING SOUNDCRAFT
 1. Clone this repository onto your computer.
 2. Run *bundle* *install* from the root of the directory to get the required gems.
 3. Run *ruby* *bank_parser.rb* to start the bank parser/OSC dispatcher.
 4. Run any programs that will receive OSC messages (*audio.ck* is a basic ChucK program that receives some messages)
-5. Play the LOrkCraft Shipyard map from the Galaxy Editor or from StarCraft 2.
+5. Play the custom maps from the Galaxy Editor or from StarCraft 2.
 
 == FILES
-* *lorkCraftShipyard.SC2Map* - the Antiga Shipyard map (forced cross-spawns at the 5 and 11 o'clock positions) with the custom data-collecting triggers applied to it; for user focus the bottom-left coordinate is (0, 0) and the top-right coordinate is (108, 128). For reference, Player 1's starting location is (76.5, 9.7617) and Player 2's starting location is (31.5, 114.7578).
+* **.SC2Map files* - These maps feature the custom data-collecting triggers created for SoundCraft; play against an AI opponent when played from the Galaxy Editor or publish this map and play against others online
 * *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map and dispatches OSC messages
 * *.ck files* - our sample sonic mappings written in ChucK that receives OSC messages from the bank parser to produce sound
 * *nime-documents* - folder containing all write-ups submitted to the NIME 2013 conference
@@ -69,7 +69,7 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
 
     9.947: /lorkCraft/unitProductionBank.SC2Bank (sf): no__unit_production, 0.0
 
-== DATA COLLECTED BY MAP
+== DATA COLLECTED BY THE CUSTOM TRIGGERS
 * Write supply every time supply is used/made
 * Write vespene collected/current count every time it changes
 * Write mineral collected/current count every time it changes
@@ -102,14 +102,6 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
   * Structures Lost
   * Weapons Upgrades Completed
   * Armor Upgrades Completed
-
-== TODOS
-* Timestamp all bank parsing and log info so a play-through can be "recreated" through the debug logs. This will be useful for testing the audio component of the system without needing to play games over and over again.
-* Add support to the custom map to collect:
-  * When units are given a command, write out command (attack/move) and destination
-  * When a unit dies write out the total units lost composition
-  * Write out research progress status every second
-  * When a player leaves the game, notify over OSC
 
 == LICENSE
 Copyright (c) 2013 vorgom.com. All rights reserved.
