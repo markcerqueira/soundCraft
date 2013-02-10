@@ -8,9 +8,9 @@
 5. Play the custom maps from the Galaxy Editor or from StarCraft 2.
 
 == FILES
-* **.SC2Map files* - These maps feature the custom data-collecting triggers created for SoundCraft; play against an AI opponent when played from the Galaxy Editor or publish this map and play against others online
+* *.*SC2Map* *files* - These maps feature the custom data-collecting triggers created for SoundCraft; play against an AI opponent when played from the Galaxy Editor or publish this map and play against others online
 * *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map and dispatches OSC messages
-* *.ck files* - our sample sonic mappings written in ChucK that receives OSC messages from the bank parser to produce sound
+* *.*ck* *files* - our sample sonic mappings written in ChucK that receives OSC messages from the bank parser to produce sound
 * *nime-documents* - folder containing all write-ups submitted to the NIME 2013 conference
 
 == DATA FLOW
