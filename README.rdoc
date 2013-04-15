@@ -4,17 +4,17 @@
 1. Clone this repository onto your computer.
 2. Run *bundle* *install* from the root of the directory to get the required gems.
 3. Run *ruby* *bank_parser.rb* to start the bank parser/OSC dispatcher.
-4. Run any programs that will receive OSC messages (*audio.ck* is a basic ChucK program that receives some messages)
-5. Play the custom maps from the Galaxy Editor or from StarCraft 2.
+4. Run any programs that will receive OSC messages (the *audio* folder contains our sample audio implementation)
+5. Play the custom maps from the Galaxy Editor or upload it to StarCraft 2 and play it from there!
 
 == FILES
-* *.*SC2Map* *files* - These maps feature the custom data-collecting triggers created for SoundCraft; play against an AI opponent when played from the Galaxy Editor or publish this map and play against others online
+* *maps* *folder* - Contains maps featuring the custom data-collecting triggers created for SoundCraft; play against an AI opponent when played from the Galaxy Editor or publish this map and play against others online
 * *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map and dispatches OSC messages
-* *.*ck* *files* - our sample sonic mappings written in ChucK that receives OSC messages from the bank parser to produce sound
+* *audio* *folder* - our sample sonic mappings written in ChucK that receives OSC messages from the bank parser to produce sound
 * *nime-documents* - folder containing all write-ups submitted to the NIME 2013 conference
 
 == DATA FLOW
-User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, unit build progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of StarCraft 2, but so far the latency does not seem bad given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched. Any OSC listener can catch those messages and process them to display data or produce sound.
+User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, unit build progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of StarCraft 2, but the latency was found to be acceptable given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched. Any OSC listener can catch those messages and process them to display data or produce sound.
 
 If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent will be printed out. The print statements include the time in seconds since the program started running, OSC address, tags, and content sent. A blank line will be printed after an entire XML bank has been parsed. Debug print statements be disabled for live performances, but can be useful while developing. Here is some sample output for reference:
     4.257: /lorkCraft/mineralBank.SC2Bank (si): total_minerals_collected, 160
