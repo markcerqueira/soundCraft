@@ -104,4 +104,19 @@ If *PRINT_DATA* is defined in *bank_parser.rb*, data for each OSC message sent w
   * Armor Upgrades Completed
 
 == LICENSE
-Copyright (c) 2013 vorgom.com. All rights reserved.
+SoundCraft is released under the {MIT License}[http://opensource.org/licenses/MIT].
+
+== COPYRIGHT NOTICES
+Thanks Blizzard for making an awesome game and tools to build awesome things around that game - without their work, SoundCraft would not be a reality! Per {Blizzard's Copyright Notices FAQ}[http://us.blizzard.com/en-us/company/about/copyrightnotices.html] here are a bunch of things we used and/or mentioned this project:
+
+Battle.net®
+©1996 - 2011 Blizzard Entertainment, Inc. All rights reserved. Battle.net and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
+
+Blizzard Entertainment®
+Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.
+
+StarCraft®
+©1998 Blizzard Entertainment, Inc. All rights reserved. StarCraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
+
+StarCraft® II: Wings of Liberty™
+©2010 Blizzard Entertainment, Inc. All rights reserved. Wings of Liberty is a trademark, and StarCraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
