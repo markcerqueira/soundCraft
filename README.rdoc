@@ -1,5 +1,8 @@
 = SoundCraft - <em>Framework for Transducing a StarCraft 2 Game</em>
 
+== SOUNDCRAFT IN ACTION
+Watch this {quick demo video}[https://vimeo.com/59392111] the SoundCraft framework in its first performance piece - GG Music!
+
 == RUNNING SOUNDCRAFT
 1. Clone this repository onto your computer.
 2. Run *bundle* *install* from the root of the directory to get the required gems.
