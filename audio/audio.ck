@@ -97,6 +97,7 @@ class Arp extends Chubgraph
     ADSR filterEnvelope => blackhole;
     
     envelope.set(20::ms, 20::ms, 1, 100::ms);
+	1 => envelope.keyOff;
     filterEnvelope.set(50::ms, 100::ms, 0.5, 100::ms);
     
     0 => envelope.value;
@@ -356,23 +357,24 @@ fun int isProduction(string unit)
     unit == "Barracks";
 }
 
-["Marine",
-"Marauder",
-"Zergling",
-"Roach",
-"Zealot",
-"Stalker",
-"Archon",
-"HighTemplar",
-"VoidRay",
-"SiegeTank",
-"Carrier",
-"Hellion",
-"Thor",
-"Immortal",
-"Colossus",
-"Sentry"]
-@=> string offensiveUnits[];
+[
+ "Marine",
+ "Marauder",
+ "Zergling",
+ "Roach",
+ "Zealot",
+ "Stalker",
+ "Archon",
+ "HighTemplar",
+ "VoidRay",
+ "SiegeTank",
+ "Carrier",
+ "Hellion",
+ "Thor",
+ "Immortal",
+ "Colossus",
+ "Sentry"
+] @=> string offensiveUnits[];
 
 fun int isOffensive(string unit)
 {
