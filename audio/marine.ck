@@ -1,9 +1,3 @@
-class Arp extends Chubgraph
-{
-    fun float freq(float f) { return f; }
-    fun void keyOn() { }
-    fun void keyOff() { }
-}
 
 class MarineArp extends Arp
 {
@@ -55,10 +49,94 @@ class MarineArp extends Arp
 }
 
 
-MarineArp a => dac;
-220 => a.freq;
-a.keyOn();
-0.25::second => now;
-a.keyOff();
-0.25::second => now;
+class ArpPoly extends Poly
+{
+    fun UGen create()
+    {
+        MarineArp a;
+        0.1 => a.gain;
+        return a;
+    }
+}
+
+public class MarineArpeggio
+{
+    ArpPoly poly => NRev reverb => dac;
+    0.05 => reverb.mix;
+    1 => poly.gain;
+    
+    poly.setNumVoices(8);
+    
+    [36, 34, 39, 41] @=> int notes[];
+    3 => int nOctave;
+    
+    int nSteps;
+    8 => int minSteps;
+    
+    0 => int techLevel;
+    
+    fun void setNumber(int n)
+    {
+        n => nSteps;
+    }
+    
+    fun void setTechLevel(int n)
+    {
+        n => techLevel;
+    }
+    
+    spork ~ go();
+    
+    fun void go()
+    {
+        0.125::second => dur quarter;
+        
+        while(true)
+        {
+            int noteIndex;
+            1 => int noteInc;
+            
+            for(int i; i < nSteps; i++)
+            {
+                (poly.get() $ MarineArp) @=> MarineArp @ arp;
+                20::ms*(techLevel+1) => arp.envelope.attackTime;
+                
+                noteIndex/notes.cap() => int octave;
+                if(octave > 4)
+                {
+                    1 +=> noteInc;
+                    -noteInc => noteInc;
+                    4 => octave;
+                }
+                
+                notes[noteIndex%notes.cap()] + octave*12 + 12 => int note;
+                //<<< "arp note:", note >>>;
+                if(i == nSteps/2)
+                    -noteInc => noteInc;
+                noteInc +=> noteIndex;
+                if(noteIndex < 0)
+                {
+                    0 => noteIndex;
+                    -noteInc => noteInc;
+                }
+                
+                note => Std.mtof => arp.freq;
+                arp.keyOn();
+                quarter => now;
+                arp.keyOff();
+            }
+            
+            if(nSteps < minSteps)
+                (minSteps-nSteps)::quarter => now;
+        }
+    }
+}
+
+
+// MarineArp a => dac;
+// 220 => a.freq;
+// a.keyOn();
+// 0.25::second => now;
+// a.keyOff();
+// 0.25::second => now;
 
