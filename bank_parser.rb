@@ -244,7 +244,7 @@ end
 
 # main file system listener function
 def listenForBankUpdates()
-  Listen.to(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true) do |modified, added|
+  Listen.to!(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true, :relative_paths => false) do |modified, added|
     filesChanged = Set.new
 
     # add modified and add files to our set
@@ -256,7 +256,7 @@ def listenForBankUpdates()
       filesChanged.each { |absolutePath| sendBank(absolutePath, File.basename(absolutePath)) }
     rescue Exception => e
       # handle e
-      puts "ERROR: exception caught"
+      puts "ERROR: exception caught: " + e + "\n"
     end
   end
 end
