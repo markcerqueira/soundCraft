@@ -1,5 +1,9 @@
 require 'rubygems'
 
+gem "nokogiri", "~> 1.5.6"
+gem "osc", "~> 0.1.4"
+gem "listen", "~> 0.7.2"
+
 require 'listen'
 require 'nokogiri'
 require 'osc'
@@ -244,7 +248,7 @@ end
 
 # main file system listener function
 def listenForBankUpdates()
-  Listen.to!(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true, :relative_paths => false) do |modified, added|
+  Listen.to(BANK_PATH, :filter => /\.SC2Bank$/, :latency => POLLING_LATENCY_SECONDS, :force_polling => true) do |modified, added|
     filesChanged = Set.new
 
     # add modified and add files to our set
