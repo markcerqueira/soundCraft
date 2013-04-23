@@ -4,12 +4,12 @@ class MarauderArp extends Arp
     SinOsc m => SinOsc c => LPF filter => ADSR envelope => outlet;
     ADSR filterEnvelope => blackhole;
     2 => c.sync;
-    200 => m.gain;
+    300 => m.gain;
     
     
     envelope.set(20::ms, 10::ms, 0.4, 100::ms);
     1 => envelope.keyOff;
-    filterEnvelope.set(20::ms, 100::ms, 0.5, 100::ms);
+    filterEnvelope.set(150::ms, 150::ms, 0.5, 100::ms);
     1 => filterEnvelope.keyOff;
     
     220 => c.freq;
@@ -68,19 +68,20 @@ class ArpPoly extends Poly
     }
 }
 
-public class MarauderArpeggio extends Arpeggio
+public class MarauderArpeggio extends MelodyArpeggio
 {
-    ArpPoly poly => NRev reverb => dac;
-    0.05 => reverb.mix;
+    ArpPoly poly;
     1 => poly.gain;
     
     poly.setNumVoices(8);
     
+    fun UGen @ output() { return poly; }
     fun Arp @ getArp() { return (poly.get() $ Arp); }
     fun int[] getNotes() { return [39, 41, 36, 34]; }
     fun int getOctaves() { return 3; }
-    fun dur getQuarterNote() { return 0.125::second; }
-    fun int phaseShift() { return 4; }
+    fun dur getQuarterNote() { return 1::second; }
+    fun int getMinSteps() { return 2; }
+    fun int phaseShift() { return 0; }
 }
 
 

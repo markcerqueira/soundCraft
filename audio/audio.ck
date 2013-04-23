@@ -1,20 +1,55 @@
 
+NRev reverb => dac;
+0.05 => reverb.mix;
 
 Death death;
-MarineArpeggio marine;
-MarauderArpeggio marauder;
+Arpeggio arpeggio[0];
 Plopper plopper;
 BassDrone bassDrone;
 
+new MarineArpeggio @=> arpeggio["Marine"];
+arpeggio["Marine"].output() => reverb;
+new MarauderArpeggio @=> arpeggio["Marauder"];
+arpeggio["Marauder"].output() => reverb;
+new ZealotArpeggio @=> arpeggio["Zealot"];
+arpeggio["Zealot"].output() => reverb;
+new StalkerArpeggio @=> arpeggio["Stalker"];
+arpeggio["Stalker"].output() => reverb;
+
+int nUnits[0];
 
 // create and setup our OSC receiver
 OscRecv recv;
 6449 => int port;
 if(me.args() >= 1)
-    me.arg(0) => Std.atoi => port;
+me.arg(0) => Std.atoi => port;
 port => recv.port;
 <<< "listening on port", port >>>;
 recv.listen();
+
+[
+"Marine",
+"Marauder",
+"Zergling",
+"Roach",
+"Zealot",
+"Stalker",
+"Archon",
+"HighTemplar",
+"VoidRay",
+"SiegeTank",
+"Carrier",
+"Hellion",
+"Thor",
+"Immortal",
+"Colossus",
+"Sentry"
+] @=> string offensiveUnits[];
+
+for(int i; i < offensiveUnits.cap(); i++)
+{
+    0 => nUnits[offensiveUnits[i]];
+}
 
 
 fun void listenForMineralChanges()
@@ -86,25 +121,6 @@ fun int isProduction(string unit)
     unit == "Barracks";
 }
 
-[
- "Marine",
- "Marauder",
- "Zergling",
- "Roach",
- "Zealot",
- "Stalker",
- "Archon",
- "HighTemplar",
- "VoidRay",
- "SiegeTank",
- "Carrier",
- "Hellion",
- "Thor",
- "Immortal",
- "Colossus",
- "Sentry"
-] @=> string offensiveUnits[];
-
 fun int isOffensive(string unit)
 {
     return unit == "Marine" ||
@@ -115,14 +131,6 @@ fun int isOffensive(string unit)
     unit == "Stalker" ||
     unit == "Sentry";
 }
-
-int nZergling;
-int nRoach;
-int nMarine;
-int nMarauder;
-int nZealot;
-int nStalker;
-int nSentry;
 
 fun void listenForUnitsBuilt()
 {
@@ -140,42 +148,15 @@ fun void listenForUnitsBuilt()
             //<<< "/lorkCraft/unitsBuiltBank.SC2Bank:", key, value >>>;
             
             if(isProduction(key))
-                bassDrone.setCompleted(value);
+            bassDrone.setCompleted(value);
             
             if(isOffensive(key))
             {
-                if(key == "Zergling")
-				{
-                    value => nZergling;
-				}
-  				else if(key == "Roach")
-				{
-                    value => nRoach;
-				}
-                if(key == "Marine")
-				{
-                    value => nMarine;
-					marine.setNumber(nMarine);
-				}
-                if(key == "Marauder")
-				{
-                    value => nMarauder;
-					marauder.setNumber(nMarauder);
-				}
-                if(key == "Zealot")
-				{
-                    value => nZealot;
-				}
-                if(key == "Stalker")
-				{
-                    value => nStalker;
-				}
-                if(key == "Sentry")
-				{
-                    value => nSentry;
-				}
+                value => nUnits[key];
+                if(arpeggio[key] != null)
+                    arpeggio[key].setNumber(nUnits[key]);
                 //<<< nZergling+nRoach+nMarine+nMarauder+nZealot+nStalker+nSentry >>>;
-  				//arpeggio.setNumber(nZergling+nRoach+nMarine+nMarauder+nZealot+nStalker+nSentry);
+                //arpeggio.setNumber(nZergling+nRoach+nMarine+nMarauder+nZealot+nStalker+nSentry);
             }
         }
     }
@@ -197,7 +178,7 @@ fun void listenForBuildingConstruction()
             //<<< "/lorkCraft/buildingProductionBank.SC2Bank:", key, value >>>;
             
             if(isProduction(key))
-                bassDrone.setUnderConstruction(value);
+            bassDrone.setUnderConstruction(value);
         }
     }
 }
@@ -216,8 +197,11 @@ fun void listenForResearchCompleted()
             oe.getString() => string key;
             oe.getInt() => int value;
             
-            marine.setTechLevel(value);
-            marauder.setTechLevel(value);
+            for(int i; i < offensiveUnits.cap(); i++)
+            {
+                if(arpeggio[offensiveUnits[i]] != null)
+                    arpeggio[offensiveUnits[i]].setTechLevel(value);
+            }
             bassDrone.setTechLevel(value);
         }
     }

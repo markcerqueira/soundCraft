@@ -65,18 +65,19 @@ class ArpPoly extends Poly
     }
 }
 
-public class MarineArpeggio extends Arpeggio
+public class MarineArpeggio extends MelodyArpeggio
 {
-    ArpPoly poly => NRev reverb => dac;
-    0.05 => reverb.mix;
+    ArpPoly poly;
     1 => poly.gain;
     
     poly.setNumVoices(8);
     
+    fun UGen @ output() { return poly; }
     fun Arp @ getArp() { return (poly.get() $ Arp); }
     fun int[] getNotes() { return [36, 34, 39, 41]; }
     fun int getOctaves() { return 3; }
     fun dur getQuarterNote() { return 0.125::second; }
+    fun int getMinSteps() { return 8; }
     fun int phaseShift() { return 0; }
 }
 
