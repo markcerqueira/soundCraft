@@ -60,7 +60,7 @@ class ArpPoly extends Poly
     fun UGen create()
     {
         MarineArp a;
-        0.1 => a.gain;
+        0.04 => a.gain;
         return a;
     }
 }

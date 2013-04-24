@@ -34,7 +34,7 @@ public class RhythmArpeggio extends Arpeggio
         
         while(true)
         {
-            Std.rand2(0,Math.min((techLevel+1)*2,numRhythms())$int-1) => int r;
+            Std.rand2f(0,Std2.clamp(Math.log2(number)/Math.log2(2),0,numRhythms()-1)) $int => int r;
             
             getRhythm(r, 0).cap() => int nSteps;
             
@@ -45,7 +45,7 @@ public class RhythmArpeggio extends Arpeggio
                     getRhythm(r, d)[i] => float P;
                     if(P > 0)
                     {
-                        Math.pow(P, 1.0/number) => P;
+                        Math.pow(P, 1.0/(techLevel*2+1)) => P;
                         hit(d, Std2.clamp(Std.rand2f(P-0.5,P), 0, 1));
                     }
                 }

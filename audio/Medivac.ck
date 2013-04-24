@@ -1,21 +1,24 @@
 
-class MarauderArp extends Arp
+class MedivacArp extends Arp
 {
-    SinOsc m => SinOsc c => LPF filter => ADSR envelope => outlet;
-    ADSR filterEnvelope => blackhole;
+    SinOsc m => SqrOsc c => LPF filter => ADSR envelope => outlet;
+    SinOsc fmod => ADSR filterEnvelope => blackhole;
     2 => c.sync;
-    300 => m.gain;
+    2000 => m.gain;
     
+    0.1 => fmod.freq;
     
-    envelope.set(20::ms, 10::ms, 0.4, 100::ms);
+    envelope.set(100::ms, 50::ms, 0.8, 150::ms);
     1 => envelope.keyOff;
-    filterEnvelope.set(150::ms, 150::ms, 0.5, 100::ms);
+    filterEnvelope.set(525::ms, 525::ms, 0.5, 425::ms);
     1 => filterEnvelope.keyOff;
+    -1 => filterEnvelope.op;
     
     220 => c.freq;
     c.freq()*8 => filter.freq;
-    1.1 => filter.Q;
-    2 => c.gain;
+    2 => filter.Q;
+    
+    int techLevel;
     
     spork ~ go();
     
@@ -23,17 +26,17 @@ class MarauderArp extends Arp
     {
         while(true)
         {
-            c.freq()+1000*filterEnvelope.value() => filter.freq;
+            c.freq()+3000*Math.pow(techLevel+2,filterEnvelope.last()*1.25) => filter.freq;
             if(filter.freq() > second/samp/4)
-            second/samp/4 => filter.freq;
+                second/samp/4 => filter.freq;
             20::ms => now;
         }
     }
     
     fun float freq(float f)
     {
-        f => c.freq;
-        f*0.25 => m.freq;
+        f*2 => c.freq;
+        f*8 => m.freq;
         return f;
     }
     
@@ -49,9 +52,9 @@ class MarauderArp extends Arp
         1 => filterEnvelope.keyOff;
     }
     
-    fun void set(int techLevel, int stepNo)
+    fun void set(int _techLevel, int stepNo)
     {
-        20::ms*(techLevel+1) => envelope.attackTime;
+        _techLevel => techLevel;
     }
     
     fun dur length() { return envelope.attackTime() + envelope.decayTime(); }
@@ -62,13 +65,13 @@ class ArpPoly extends Poly
 {
     fun UGen create()
     {
-        MarauderArp a;
+        MedivacArp a;
         0.04 => a.gain;
         return a;
     }
 }
 
-public class MarauderArpeggio extends MelodyArpeggio
+public class MedivacArpeggio extends MelodyArpeggio
 {
     ArpPoly poly;
     1 => poly.gain;
@@ -79,16 +82,7 @@ public class MarauderArpeggio extends MelodyArpeggio
     fun Arp @ getArp() { return (poly.get() $ Arp); }
     fun int[] getNotes() { return [39, 41, 36, 34]; }
     fun int getOctaves() { return 3; }
-    fun dur getQuarterNote() { return 1::second; }
-    fun int getMinSteps() { return 2; }
+    fun dur getQuarterNote() { return 2::second; }
+    fun int getMinSteps() { return 1; }
     fun int phaseShift() { return 0; }
 }
-
-
-// MarauderArp a => dac;
-// 220 => a.freq;
-// a.keyOn();
-// 0.25::second => now;
-// a.keyOff();
-// 0.25::second => now;
-// 

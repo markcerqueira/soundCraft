@@ -9,11 +9,20 @@ BassDrone bassDrone;
 
 new MarineArpeggio @=> arpeggio["Marine"];
 arpeggio["Marine"].output() => reverb;
+
 new MarauderArpeggio @=> arpeggio["Marauder"];
 arpeggio["Marauder"].output() => reverb;
+
+new MedivacArpeggio @=> arpeggio["Medivac"];
+arpeggio["Medivac"].output() => reverb;
+
 new ZealotArpeggio @=> arpeggio["Zealot"];
 arpeggio["Zealot"].output() => reverb;
-new StalkerArpeggio @=> arpeggio["Stalker"];
+
+new StalkerArpeggio @=> arpeggio["Sentry"];
+arpeggio["Sentry"].output() => reverb;
+
+new SentryArpeggio @=> arpeggio["Stalker"];
 arpeggio["Stalker"].output() => reverb;
 
 int nUnits[0];
@@ -21,8 +30,7 @@ int nUnits[0];
 // create and setup our OSC receiver
 OscRecv recv;
 6449 => int port;
-if(me.args() >= 1)
-me.arg(0) => Std.atoi => port;
+if(me.args() >= 1) me.arg(0) => Std.atoi => port;
 port => recv.port;
 <<< "listening on port", port >>>;
 recv.listen();
@@ -38,6 +46,7 @@ recv.listen();
 "HighTemplar",
 "VoidRay",
 "SiegeTank",
+"Medivac",
 "Carrier",
 "Hellion",
 "Thor",
@@ -123,13 +132,13 @@ fun int isProduction(string unit)
 
 fun int isOffensive(string unit)
 {
-    return unit == "Marine" ||
-    unit == "Marauder" ||
-    unit == "Zergling" ||
-    unit == "Roach" ||
-    unit == "Zealot" ||
-    unit == "Stalker" ||
-    unit == "Sentry";
+    for(int i; i < offensiveUnits.cap(); i++)
+    {
+        if(unit == offensiveUnits[i])
+            return true;
+    }
+    
+    return false;
 }
 
 fun void listenForUnitsBuilt()
