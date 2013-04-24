@@ -66,7 +66,7 @@ class ArpPoly extends Poly
     fun UGen create()
     {
         MedivacArp a;
-        0.04 => a.gain;
+        0.075 => a.gain;
         return a;
     }
 }
@@ -86,3 +86,4 @@ public class MedivacArpeggio extends MelodyArpeggio
     fun int getMinSteps() { return 1; }
     fun int phaseShift() { return 0; }
 }
+

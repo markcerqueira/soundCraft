@@ -10,6 +10,7 @@ public class RhythmArpeggio extends Arpeggio
     fun dur getQuarterNote() { return 0.125::second; }
     fun int phaseShift() { return 0; }
 	
+    
     /* internal */
     
     0 => int number;
@@ -34,7 +35,7 @@ public class RhythmArpeggio extends Arpeggio
         
         while(true)
         {
-            Std.rand2f(0,Std2.clamp(Math.log2(number)/Math.log2(2),0,numRhythms()-1)) $int => int r;
+            Std.rand2f(0,Std2.clamp(Math.ceil(Math.log2(number)/Math.log2(1.5)),0,numRhythms()-1)) $int => int r;
             
             getRhythm(r, 0).cap() => int nSteps;
             

@@ -1,3 +1,5 @@
-- different sound for different units
 - mule sound
 - chrono boost sound
+- psy storm sound
+- nuke sound (distortion)
+- ghost sound

@@ -63,7 +63,7 @@ class ArpPoly extends Poly
     fun UGen create()
     {
         MarauderArp a;
-        0.04 => a.gain;
+        0.08 => a.gain;
         return a;
     }
 }
@@ -84,11 +84,3 @@ public class MarauderArpeggio extends MelodyArpeggio
     fun int phaseShift() { return 0; }
 }
 
-
-// MarauderArp a => dac;
-// 220 => a.freq;
-// a.keyOn();
-// 0.25::second => now;
-// a.keyOff();
-// 0.25::second => now;
-// 
