@@ -6,6 +6,7 @@ public class ZealotArpeggio extends RhythmArpeggio
     
     "samples/UN_AFCNG_OPN_01.aif" => drum[0].read;
     "samples/UN_LCNG_HI_OPN_02.aif" => drum[1].read;
+    1.5 => master.gain;
     
     for(int i; i < drum.cap(); i++)
     {
@@ -33,13 +34,8 @@ public class ZealotArpeggio extends RhythmArpeggio
         ],
         
         [
-            [0.5, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0]
-        ],
-        
-        [
             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0],
-            [0.5, 0.5, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0]
+            [0.5, 0.0, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0]
         ],
         
         [

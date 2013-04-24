@@ -11,6 +11,8 @@ Machine.add("Medivac.ck");
 Machine.add("Zealot.ck");
 Machine.add("Stalker.ck");
 Machine.add("Sentry.ck");
+Machine.add("HighTemplar.ck");
+Machine.add("Archon.ck");
 Machine.add("Death.ck");
 
 // if(me.args() >= 1)

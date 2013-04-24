@@ -8,6 +8,7 @@ public class SentryArpeggio extends RhythmArpeggio
     "samples/UN_PAND1_OPN_02.aif" => drum[0].read;
     // repinique
     "samples/UN_RDM_HI_EDG_01.aif" => drum[1].read;
+    1.5 => master.gain;
     
     for(int i; i < drum.cap(); i++)
     {

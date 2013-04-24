@@ -26,6 +26,12 @@ arpeggio["Sentry"].output() => reverb;
 new SentryArpeggio @=> arpeggio["Stalker"];
 arpeggio["Stalker"].output() => reverb;
 
+new HighTemplarArpeggio @=> arpeggio["HighTemplar"];
+arpeggio["HighTemplar"].output() => reverb;
+
+new ArchonArpeggio @=> arpeggio["Archon"];
+arpeggio["Archon"].output() => reverb;
+
 int nUnits[0];
 
 // create and setup our OSC receiver

@@ -4,9 +4,10 @@ public class StalkerArpeggio extends RhythmArpeggio
     Gain master;
     SndBuf drum[2];
     
-    "samples/IL02-CBA_Hrd.aif" => drum[0].read;
+    "samples/TMD EH SNAP 1.aif" => drum[0].read;
     "samples/DAT-MinimalElectro_Snr.aif" => drum[1].read;
     0.5 => drum[1].gain;
+    1.1 => master.gain;
     
     for(int i; i < drum.cap(); i++)
     {
