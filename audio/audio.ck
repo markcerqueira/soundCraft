@@ -1,5 +1,5 @@
 
-NRev reverb => dac;
+NRev reverb => NukeFilter nuke => dac;
 0.05 => reverb.mix;
 0.1 => reverb.gain;
 
@@ -55,6 +55,7 @@ for(int i; i < offensiveUnits.cap(); i++)
         arpeggio[unit].output() => reverb;
 }
 
+0 => int numNukes;
 
 fun void listenForMineralChanges()
 {    
@@ -237,6 +238,31 @@ fun void listenForUnitsAndStructuresLost()
     }
 }
 
+fun void listenForAbilities()
+{
+    recv.event( "/lorkCraft/abilitiesUsedBank.SC2Bank, s s" ) @=> OscEvent oe;
+    
+    while ( true )
+    {
+        oe => now;
+        
+        while( oe.nextMsg() != 0 )
+        { 
+            oe.getString() => string unit;
+            oe.getString() => string ability;
+            
+            //<<< "/lorkCraft/abilitiesUsedBank.SC2Bank:", unit, ability >>>;
+            if(ability == "TacNukeStrike")
+            {
+                //<<< "/lorkCraft/abilitiesUsedBank.SC2Bank:", unit, ability >>>;
+                nuke.nukeCalled();
+            }
+        }
+    }
+}
+
+
+
 spork ~ listenForMineralChanges();
 spork ~ listenForVespeneChanges();
 spork ~ listenForSupplyChanges();
@@ -244,6 +270,7 @@ spork ~ listenForUnitsBuilt();
 spork ~ listenForBuildingConstruction();
 spork ~ listenForResearchCompleted();
 spork ~ listenForUnitsAndStructuresLost();
+spork ~ listenForAbilities();
 
 10::day => now;
 

@@ -1,5 +1,9 @@
 - mule sound
+- - OrbitalCommand CalldownMULE
 - chrono boost sound
+- - Nexus TimeWarp
 - psy storm sound
+- - HighTemplar PsiStorm
 - nuke sound (distortion)
+- - Ghost TacNukeStrike
 - ghost sound

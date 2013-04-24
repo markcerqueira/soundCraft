@@ -14,6 +14,7 @@ Machine.add("Sentry.ck");
 Machine.add("HighTemplar.ck");
 Machine.add("Archon.ck");
 Machine.add("Death.ck");
+Machine.add("NukeFilter.ck");
 
 // if(me.args() >= 1)
 //     Machine.add("audio.ck:" + me.arg(0));
