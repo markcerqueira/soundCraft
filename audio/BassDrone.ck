@@ -1,15 +1,13 @@
 
-public class BassDrone
+public class BassDrone extends Chubgraph
 {
-    SinOsc m => SinOsc c => NRev reverb => dac;
+    SinOsc m => SinOsc c => outlet;
     2 => c.sync;
     0.025 => c.gain;
     
     50 => c.freq;
     c.freq()*0.5 => m.freq;
     100 => m.gain;
-    
-    0.1 => reverb.mix;
     
     c.freq() => float freq_target;
     

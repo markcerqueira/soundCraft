@@ -3,10 +3,10 @@ NRev reverb => dac;
 0.05 => reverb.mix;
 0.1 => reverb.gain;
 
-Death death;
+Death death => reverb;
 Arpeggio arpeggio[0];
-Plopper plopper;
-BassDrone bassDrone;
+Plopper plopper => reverb;
+BassDrone bassDrone => reverb;
 
 new MarineArpeggio @=> arpeggio["Marine"];
 arpeggio["Marine"].output() => reverb;

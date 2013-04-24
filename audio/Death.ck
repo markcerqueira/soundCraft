@@ -1,18 +1,16 @@
-public class Death
+public class Death extends Chubgraph
 {
-    SinOsc m => SawOsc c => HPF hi => HPF lo => HPF mid => Gain direct => Gain amp => NRev reverb => dac;
+    SinOsc m => SawOsc c => HPF hi => HPF lo => HPF mid => Gain direct => Gain amp => outlet;
     
-    Impulse energy => OnePole op => amp;
+    Impulse energy => OnePole _op => amp;
     3 => amp.op;
-    0.99995 => op.pole;
+    0.99995 => _op.pole;
     
     2 => c.sync;
     
     direct => Delay d => direct;
     0.1::second => d.max => d.delay;
     0.95 => d.gain;
-    
-    0.1 => reverb.mix;
     
     SinOsc lfo1 => blackhole;
     4 => lfo1.freq;

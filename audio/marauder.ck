@@ -73,7 +73,7 @@ public class MarauderArpeggio extends MelodyArpeggio
     ArpPoly poly;
     1 => poly.gain;
     
-    poly.setNumVoices(4);
+    poly.setNumVoices(8);
     
     fun UGen @ output() { return poly; }
     fun Arp @ getArp() { return (poly.get() $ Arp); }
