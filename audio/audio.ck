@@ -1,6 +1,7 @@
 
 NRev reverb => dac;
 0.05 => reverb.mix;
+0.1 => reverb.gain;
 
 Death death;
 Arpeggio arpeggio[0];
@@ -74,7 +75,7 @@ fun void listenForMineralChanges()
             oe.getString() => string key;
             oe.getInt() => int value;
             
-            <<< "/lorkCraft/mineralBank.SC2Bank:", key, value >>>;
+            //<<< "/lorkCraft/mineralBank.SC2Bank:", key, value >>>;
             
             spork ~ plopper.plop();
         }
