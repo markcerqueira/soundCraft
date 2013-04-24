@@ -60,7 +60,7 @@ class ArpPoly extends Poly
     fun UGen create()
     {
         MarineArp a;
-        0.04 => a.gain;
+        0.075 => a.gain;
         return a;
     }
 }
@@ -80,12 +80,4 @@ public class MarineArpeggio extends MelodyArpeggio
     fun int getMinSteps() { return 8; }
     fun int phaseShift() { return 0; }
 }
-
-
-// MarineArp a => dac;
-// 220 => a.freq;
-// a.keyOn();
-// 0.25::second => now;
-// a.keyOff();
-// 0.25::second => now;
 

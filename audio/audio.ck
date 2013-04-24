@@ -9,28 +9,13 @@ Plopper plopper => reverb;
 BassDrone bassDrone => reverb;
 
 new MarineArpeggio @=> arpeggio["Marine"];
-arpeggio["Marine"].output() => reverb;
-
 new MarauderArpeggio @=> arpeggio["Marauder"];
-arpeggio["Marauder"].output() => reverb;
-
 new MedivacArpeggio @=> arpeggio["Medivac"];
-arpeggio["Medivac"].output() => reverb;
-
 new ZealotArpeggio @=> arpeggio["Zealot"];
-arpeggio["Zealot"].output() => reverb;
-
 new StalkerArpeggio @=> arpeggio["Sentry"];
-arpeggio["Sentry"].output() => reverb;
-
 new SentryArpeggio @=> arpeggio["Stalker"];
-arpeggio["Stalker"].output() => reverb;
-
 new HighTemplarArpeggio @=> arpeggio["HighTemplar"];
-arpeggio["HighTemplar"].output() => reverb;
-
 new ArchonArpeggio @=> arpeggio["Archon"];
-arpeggio["Archon"].output() => reverb;
 
 int nUnits[0];
 
@@ -64,7 +49,10 @@ recv.listen();
 
 for(int i; i < offensiveUnits.cap(); i++)
 {
-    0 => nUnits[offensiveUnits[i]];
+    offensiveUnits[i] => string unit;
+    0 => nUnits[unit];
+    if(arpeggio[unit] != null)
+        arpeggio[unit].output() => reverb;
 }
 
 

@@ -6,7 +6,7 @@ public class ArchonArpeggio extends RhythmArpeggio
     
     "samples/DAT-MinimalElectro_boomkik.aif" => drum[0].read;
     "samples/IL02-CHI_TT_HI_OPN_02.aif" => drum[1].read;
-    2 => drum[0].gain;
+    1.5 => drum[0].gain;
     1.1 => master.gain;
     
     for(int i; i < drum.cap(); i++)
