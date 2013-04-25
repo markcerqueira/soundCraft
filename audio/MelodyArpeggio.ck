@@ -9,6 +9,7 @@ public class MelodyArpeggio extends Arpeggio
     fun dur getQuarterNote() { return 0.125::second; }
     fun int getMinSteps() { return 8; }
     fun int phaseShift() { return 0; }
+    fun int stepStart() { return 0; }
 	
 	/* internal */
 	
@@ -42,11 +43,15 @@ public class MelodyArpeggio extends Arpeggio
             int noteIndex;
             1 => int noteInc;
             
-            for(int i; i < nSteps; i++)
+            for(int i; i < nSteps+stepStart(); i++)
             {
-                getArp() @=> Arp @ arp;
-                arp.set(techLevel, i);
-                this.set(techLevel, i);
+                Arp @ arp;
+                if(i >= stepStart())
+                {
+                    getArp() @=> arp;
+                    arp.set(techLevel, i);
+                    this.set(techLevel, i);
+                }
                 
                 noteIndex/notes.cap() => int octave;
                 if(octave > 4)
@@ -67,14 +72,17 @@ public class MelodyArpeggio extends Arpeggio
                     -noteInc => noteInc;
                 }
                 
-                note => Std.mtof => arp.freq;
+                if(i >= stepStart())
+                {
+                    note => Std.mtof => arp.freq;
                 
-                arp.keyOn();
-                quarter => now;
-                if(arp.length() < quarter)
-                    arp.keyOff();
-                else
-                    spork ~ arp.keyOff(arp.length()-quarter);
+                    arp.keyOn();
+                    quarter => now;
+                    if(arp.length() < quarter)
+                        arp.keyOff();
+                    else
+                        spork ~ arp.keyOff(arp.length()-quarter);
+                }
             }
             
             if(nSteps < minSteps)

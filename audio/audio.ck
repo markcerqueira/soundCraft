@@ -52,8 +52,6 @@ player[1].listen();
 [
 "Marine",
 "Marauder",
-"Zergling",
-"Roach",
 "Zealot",
 "Stalker",
 "Archon",
@@ -66,8 +64,14 @@ player[1].listen();
 "Thor",
 "Immortal",
 "Colossus",
-"Sentry"
+"Sentry",
+"Ghost"
 ] @=> string offensiveUnits[];
+
+[
+ [ "Marine", "Marauder", "SiegeTank", "Medivac", "Hellion", "Thor", "Ghost" ],
+ [ "Zealot", "Stalker", "Archon", "HighTemplar", "VoidRay", "Carrier", "Immortal", "Colossus", "Sentry" ]
+] @=> string playerUnits[][];
 
 for(int i; i < offensiveUnits.cap(); i++)
 {
@@ -228,10 +232,10 @@ fun void listenForResearchCompleted(int p)
             oe.getString() => string key;
             oe.getInt() => int value;
             
-            for(int i; i < offensiveUnits.cap(); i++)
+            for(int i; i < playerUnits[p].cap(); i++)
             {
-                if(arpeggio[offensiveUnits[i]] != null)
-                    arpeggio[offensiveUnits[i]].setTechLevel(value);
+                if(arpeggio[playerUnits[p][i]] != null)
+                    arpeggio[playerUnits[p][i]].setTechLevel(value);
             }
             bassDrone[p].setTechLevel(value);
         }

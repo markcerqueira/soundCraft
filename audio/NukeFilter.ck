@@ -19,9 +19,9 @@ public class NukeFilter
     {
         nukeTime*gameTimeConversion => now;
         numNukes++;
-        Std2.clamp(16-numNukes*3, 1, 32) $int => int bits;
+        Std2.clamp(16-numNukes*2, 1, 32) $int => int bits;
         numNukes*6+1 => int dsFactor;
-        Math.pow(7, -Std2.clamp(numNukes-3, 0, 2)) => float gain;
+        1-Math.pow(1.2,-bits+0.75) => float gain;
         
         for(int i; i < distortion.cap(); i++)
         {

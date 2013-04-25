@@ -13,6 +13,9 @@ class MarineArp extends Arp
     c.freq()*8 => filter.freq;
     2 => filter.Q;
     
+    Math.pow(2.0,1.0/12.0) => float semitone;
+    0 => float detune;
+    
     spork ~ go();
     
     fun void go()
@@ -28,7 +31,7 @@ class MarineArp extends Arp
     
     fun float freq(float f)
     {
-        f => c.freq;
+        f*Math.pow(semitone,Std.rand2f(-detune, detune)) => c.freq;
         return f;
     }
     
@@ -46,9 +49,9 @@ class MarineArp extends Arp
     
     fun void set(int techLevel, int stepNo)
     {
-        (5+10*techLevel)::ms => envelope.attackTime;
+        (2+20*techLevel)::ms => envelope.attackTime;
         Math.min(5+10*techLevel, 20)::ms => envelope.decayTime;
-        Math.min(5+10*techLevel, 200)::ms => envelope.releaseTime;
+        Math.min(5+10*techLevel, 500)::ms => envelope.releaseTime;
     }
     
     fun dur length() { return envelope.attackTime(); }
@@ -83,6 +86,8 @@ public class MarineArpeggio extends MelodyArpeggio
     fun dur getQuarterNote() { return 0.125::second; }
     fun int getMinSteps() { return 8; }
     fun int phaseShift() { return 0; }
+    
+    fun int stepStart() { return techLevel*2; }
     
     fun void set(int techLevel, int stepNo)
     {
