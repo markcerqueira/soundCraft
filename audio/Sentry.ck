@@ -20,6 +20,7 @@ public class SentryArpeggio extends RhythmArpeggio
     
     fun void hit(int d, float intensity)
     {
+        //Math.pow(1.1, Std.rand2f(-1,1)) => drum[d].rate;
         intensity => drum[d].gain;
         0 => drum[d].pos;
     }
