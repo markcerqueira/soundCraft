@@ -73,17 +73,22 @@ class ArpPoly extends Poly
 
 public class MedivacArpeggio extends MelodyArpeggio
 {
-    ArpPoly poly;
-    1 => poly.gain;
+    ArpPoly poly => Pan8 pan;
+    6 => poly.gain;
     
     poly.setNumVoices(8);
     
-    fun UGen @ output() { return poly; }
+    fun UGen @ output(int c) { return pan.chan(c); }
     fun Arp @ getArp() { return (poly.get() $ Arp); }
     fun int[] getNotes() { return [39, 41, 36, 34]; }
     fun int getOctaves() { return 3; }
     fun dur getQuarterNote() { return 2::second; }
     fun int getMinSteps() { return 1; }
     fun int phaseShift() { return 0; }
+    
+    fun void set(int techLevel, int stepNo)
+    {
+        Std.rand2f(0,8) => pan.pan;
+    }
 }
 

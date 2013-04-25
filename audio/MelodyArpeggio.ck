@@ -46,6 +46,7 @@ public class MelodyArpeggio extends Arpeggio
             {
                 getArp() @=> Arp @ arp;
                 arp.set(techLevel, i);
+                this.set(techLevel, i);
                 
                 noteIndex/notes.cap() => int octave;
                 if(octave > 4)
@@ -67,6 +68,7 @@ public class MelodyArpeggio extends Arpeggio
                 }
                 
                 note => Std.mtof => arp.freq;
+                
                 arp.keyOn();
                 quarter => now;
                 if(arp.length() < quarter)

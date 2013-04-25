@@ -9,6 +9,9 @@ public class RhythmArpeggio extends Arpeggio
     fun float[] getRhythm(int no, int drum) { return null; }
     fun dur getQuarterNote() { return 0.125::second; }
     fun int phaseShift() { return 0; }
+    
+    /* listener overrides */
+    fun void nextRhythm() { }
 	
     
     /* internal */
@@ -36,6 +39,7 @@ public class RhythmArpeggio extends Arpeggio
         while(true)
         {
             Std.rand2f(0,Std2.clamp(Math.ceil(Math.log2(number)/Math.log2(1.5)),0,numRhythms()-1)) $int => int r;
+            nextRhythm();
             
             getRhythm(r, 0).cap() => int nSteps;
             
