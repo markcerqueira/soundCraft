@@ -68,7 +68,7 @@ class ArpPoly extends Poly
 public class MarineArpeggio extends MelodyArpeggio
 {
     ArpPoly poly => Pan8 pan;
-    7 => poly.gain;
+    6 => poly.gain;
 
     poly.setNumVoices(8);
     

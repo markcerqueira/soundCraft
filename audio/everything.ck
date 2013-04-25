@@ -16,10 +16,4 @@ Machine.add("Archon.ck");
 Machine.add("Death.ck");
 Machine.add("NukeFilter.ck");
 
-// if(me.args() >= 1)
-//     Machine.add("audio.ck:" + me.arg(0));
-// else
-//     Machine.add("audio.ck");
-
-Machine.add("audio.ck:6449");
-Machine.add("audio.ck:6450");
+Machine.add("audio.ck:6449:6450");

@@ -1,12 +1,26 @@
 
-NRev reverb => NukeFilter nuke => dac;
-0.05 => reverb.mix;
-0.1 => reverb.gain;
+dac.channels() => int NUM_CHANNELS;
 
-Death death => reverb;
+NRev reverb[NUM_CHANNELS];
+NukeFilter nuke;
+
+Death death;
 Arpeggio arpeggio[0];
-Plopper plopper => reverb;
-BassDrone bassDrone => reverb;
+Plopper plopper;
+BassDrone bassDrone[2];
+
+for(int i; i < NUM_CHANNELS; i++)
+{
+    reverb[i] => nuke.input(i);
+    nuke.output(i) => dac.chan(i);
+    death => reverb[i];
+    plopper => reverb[i];
+    bassDrone[0] => reverb[i];
+    bassDrone[1] => reverb[i];
+    
+    0.05 => reverb[i].mix;
+    0.1 => reverb[i].gain;
+}
 
 new MarineArpeggio @=> arpeggio["Marine"];
 new MarauderArpeggio @=> arpeggio["Marauder"];
@@ -20,12 +34,20 @@ new ArchonArpeggio @=> arpeggio["Archon"];
 int nUnits[0];
 
 // create and setup our OSC receiver
-OscRecv recv;
-6449 => int port;
-if(me.args() >= 1) me.arg(0) => Std.atoi => port;
-port => recv.port;
-<<< "listening on port", port >>>;
-recv.listen();
+OscRecv player[2];
+
+6449 => int port1;
+if(me.args() >= 1) me.arg(0) => Std.atoi => port1;
+port1 => player[0].port;
+<<< "listening for player 1 on port", port1 >>>;
+player[0].listen();
+
+// create and setup our OSC receiver
+6450 => int port2;
+if(me.args() >= 2) me.arg(1) => Std.atoi => port2;
+port2 => player[1].port;
+<<< "listening for player 2 on port", port2 >>>;
+player[1].listen();
 
 [
 "Marine",
@@ -51,15 +73,21 @@ for(int i; i < offensiveUnits.cap(); i++)
 {
     offensiveUnits[i] => string unit;
     0 => nUnits[unit];
+    
     if(arpeggio[unit] != null)
-        arpeggio[unit].output() => reverb;
+    {
+        for(int j; j < NUM_CHANNELS; j++)
+        {
+            arpeggio[unit].output(j) => reverb[j];
+        }
+    }
 }
 
 0 => int numNukes;
 
-fun void listenForMineralChanges()
+fun void listenForMineralChanges(int p)
 {    
-    recv.event( "/lorkCraft/mineralBank.SC2Bank, s i" ) @=> OscEvent oe;
+    player[p].event( "/lorkCraft/mineralBank.SC2Bank, si" ) @=> OscEvent oe;
     
     while ( true )
     {
@@ -77,9 +105,9 @@ fun void listenForMineralChanges()
     }
 }
 
-fun void listenForVespeneChanges()
+fun void listenForVespeneChanges(int p)
 {
-    recv.event( "/lorkCraft/vespeneBank.SC2Bank, s i" ) @=> OscEvent oe;
+    player[p].event( "/lorkCraft/vespeneBank.SC2Bank, si" ) @=> OscEvent oe;
     
     while ( true )
     {
@@ -97,9 +125,9 @@ fun void listenForVespeneChanges()
     }
 }
 
-fun void listenForSupplyChanges()
+fun void listenForSupplyChanges(int p)
 {
-    recv.event( "/lorkCraft/supplyBank.SC2Bank, s s" ) @=> OscEvent oe;
+    player[p].event( "/lorkCraft/supplyBank.SC2Bank, ss" ) @=> OscEvent oe;
     
     while ( true )
     {
@@ -115,17 +143,6 @@ fun void listenForSupplyChanges()
     }
 }
 
-fun int isProduction(string unit)
-{
-    return unit == "Hatchery" ||
-    unit == "Gateway" ||
-    unit == "Stargate" ||
-    unit == "Robotics Facility" ||
-    unit == "Factory" ||
-    unit == "Starport" ||
-    unit == "Barracks";
-}
-
 fun int isOffensive(string unit)
 {
     for(int i; i < offensiveUnits.cap(); i++)
@@ -137,9 +154,9 @@ fun int isOffensive(string unit)
     return false;
 }
 
-fun void listenForUnitsBuilt()
+fun void listenForUnitsBuilt(int p)
 {
-    recv.event( "/lorkCraft/unitsBuiltBank.SC2Bank, s i" ) @=> OscEvent oe;
+    player[p].event( "/lorkCraft/unitsBuiltBank.SC2Bank, si" ) @=> OscEvent oe;
     
     while ( true )
     {
@@ -153,23 +170,32 @@ fun void listenForUnitsBuilt()
             //<<< "/lorkCraft/unitsBuiltBank.SC2Bank:", key, value >>>;
             
             if(isProduction(key))
-            bassDrone.setCompleted(value);
+                bassDrone[p].setCompleted(value);
             
             if(isOffensive(key))
             {
                 value => nUnits[key];
                 if(arpeggio[key] != null)
                     arpeggio[key].setNumber(nUnits[key]);
-                //<<< nZergling+nRoach+nMarine+nMarauder+nZealot+nStalker+nSentry >>>;
-                //arpeggio.setNumber(nZergling+nRoach+nMarine+nMarauder+nZealot+nStalker+nSentry);
             }
         }
     }
 }
 
-fun void listenForBuildingConstruction()
+fun int isProduction(string unit)
 {
-    recv.event( "/lorkCraft/buildingProductionBank.SC2Bank, s i" ) @=> OscEvent oe;
+    return unit == "Hatchery" ||
+    unit == "Gateway" ||
+    unit == "Stargate" ||
+    unit == "Robotics Facility" ||
+    unit == "Factory" ||
+    unit == "Starport" ||
+    unit == "Barracks";
+}
+
+fun void listenForBuildingConstruction(int p)
+{
+    player[p].event( "/lorkCraft/buildingProductionBank.SC2Bank, si" ) @=> OscEvent oe;
     
     while ( true )
     {
@@ -183,15 +209,15 @@ fun void listenForBuildingConstruction()
             //<<< "/lorkCraft/buildingProductionBank.SC2Bank:", key, value >>>;
             
             if(isProduction(key))
-            bassDrone.setUnderConstruction(value);
+                bassDrone[p].setUnderConstruction(value);
         }
     }
 }
 
 
-fun void listenForResearchCompleted()
+fun void listenForResearchCompleted(int p)
 {
-    recv.event( "/lorkCraft/researchCompletedBank.SC2Bank, s i" ) @=> OscEvent oe;
+    player[p].event( "/lorkCraft/researchCompletedBank.SC2Bank, si" ) @=> OscEvent oe;
     
     while ( true )
     {
@@ -207,14 +233,14 @@ fun void listenForResearchCompleted()
                 if(arpeggio[offensiveUnits[i]] != null)
                     arpeggio[offensiveUnits[i]].setTechLevel(value);
             }
-            bassDrone.setTechLevel(value);
+            bassDrone[p].setTechLevel(value);
         }
     }
 }
 
-fun void listenForUnitsAndStructuresLost()
+fun void listenForUnitsAndStructuresLost(int p)
 {
-    recv.event( "/lorkCraft/scoreBank.SC2Bank, s i" ) @=> OscEvent oe;
+    player[p].event( "/lorkCraft/scoreBank.SC2Bank, si" ) @=> OscEvent oe;
     int totalLost;
     
     while ( true )
@@ -238,9 +264,9 @@ fun void listenForUnitsAndStructuresLost()
     }
 }
 
-fun void listenForAbilities()
+fun void listenForAbilities(int p)
 {
-    recv.event( "/lorkCraft/abilitiesUsedBank.SC2Bank, s s" ) @=> OscEvent oe;
+    player[p].event( "/lorkCraft/abilitiesUsedBank.SC2Bank, ss" ) @=> OscEvent oe;
     
     while ( true )
     {
@@ -261,16 +287,17 @@ fun void listenForAbilities()
     }
 }
 
-
-
-spork ~ listenForMineralChanges();
-spork ~ listenForVespeneChanges();
-spork ~ listenForSupplyChanges();
-spork ~ listenForUnitsBuilt();
-spork ~ listenForBuildingConstruction();
-spork ~ listenForResearchCompleted();
-spork ~ listenForUnitsAndStructuresLost();
-spork ~ listenForAbilities();
+for(int p; p < 2; p++)
+{
+    spork ~ listenForMineralChanges(p);
+    spork ~ listenForVespeneChanges(p);
+    //spork ~ listenForSupplyChanges();
+    spork ~ listenForUnitsBuilt(p);
+    spork ~ listenForBuildingConstruction(p);
+    spork ~ listenForResearchCompleted(p);
+    spork ~ listenForUnitsAndStructuresLost(p);
+    spork ~ listenForAbilities(p);
+}
 
 10::day => now;
 

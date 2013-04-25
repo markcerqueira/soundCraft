@@ -2,6 +2,7 @@
 class MarauderArp extends Arp
 {
     SinOsc m => SinOsc c => LPF filter => ADSR envelope => outlet;
+    m => SinOsc c2 => filter;
     ADSR filterEnvelope => blackhole;
     2 => c.sync;
     300 => m.gain;
@@ -33,6 +34,7 @@ class MarauderArp extends Arp
     fun float freq(float f)
     {
         f => c.freq;
+        f/4 => c2.freq;
         f*0.25 => m.freq;
         return f;
     }
@@ -71,7 +73,7 @@ class ArpPoly extends Poly
 public class MarauderArpeggio extends MelodyArpeggio
 {
     ArpPoly poly => Pan8 pan;
-    7 => poly.gain;
+    6 => poly.gain;
     
     poly.setNumVoices(8);
     

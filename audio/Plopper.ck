@@ -25,7 +25,7 @@ public class Plopper extends Chubgraph
 {
     PlopPoly ploppy => outlet;
     
-    ploppy.setNumVoices(32);
+    ploppy.setNumVoices(48);
     0.1 => ploppy.gain;
     
     [36, 34, 39, 41] @=> int notes[];
