@@ -1,5 +1,6 @@
 
-dac.channels() => int NUM_CHANNELS;
+8 => int NUM_CHANNELS;
+dac.channels() => int numOut;
 
 NRev reverb[NUM_CHANNELS];
 NukeFilter nuke;
@@ -12,7 +13,7 @@ BassDrone bassDrone[2];
 for(int i; i < NUM_CHANNELS; i++)
 {
     reverb[i] => nuke.input(i);
-    nuke.output(i) => dac.chan(i);
+    nuke.output(i) => dac.chan(i%numOut);
     death => reverb[i];
     plopper => reverb[i];
     bassDrone[0] => reverb[i];
