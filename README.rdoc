@@ -14,7 +14,6 @@ Watch this {quick demo video}[https://vimeo.com/59392111] the SoundCraft framewo
 * *maps* *folder* - Contains maps featuring the custom data-collecting triggers created for SoundCraft; play against an AI opponent when played from the Galaxy Editor or publish this map and play against others online
 * *bank_parser.rb* - Ruby script that parses the XML bank files written by our custom map and dispatches OSC messages
 * *audio* *folder* - our sample sonic mappings written in ChucK that receives OSC messages from the bank parser to produce sound
-* *nime-documents* - folder containing all write-ups submitted to the NIME 2013 conference
 
 == DATA FLOW
 User data is collected as events occur (e.g. minerals collected, units die) or at fixed polling intervals (collecting APM, unit build progress) and written to XML bank files. Unfortunately, this is the only legitimate way to get data out of StarCraft 2, but the latency was found to be acceptable given we can control how often we poll for changes to these bank files. A Ruby script monitors the folder containing the bank files using guard/listen[https://github.com/guard/listen] and when those files are modified, the XML files are parsed using Nokogiri[http://nokogiri.org/] and OSC messages are dispatched. Any OSC listener can catch those messages and process them to display data or produce sound.
