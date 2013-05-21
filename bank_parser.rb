@@ -260,7 +260,7 @@ def listenForBankUpdates()
       filesChanged.each { |absolutePath| sendBank(absolutePath, File.basename(absolutePath)) }
     rescue Exception => e
       # handle e
-      puts "ERROR: exception caught: " + e + "\n"
+      # puts "ERROR: exception caught: " + e + "\n"
     end
   end
 end
