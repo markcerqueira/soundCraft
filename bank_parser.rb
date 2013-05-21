@@ -275,7 +275,14 @@ unless ARGV.length == 2
   exit
 end
 
-$serverHost = ARGV[0]
+serverHost = ARGV[0]
+
+if(serverHost == "localhost")
+  $serverHost == "127.0.0.1"
+else
+  $serverHost = ARGV[0]
+end
+
 $serverPort = ARGV[1]
 
 $aggregateProductionHash.default = 0;
