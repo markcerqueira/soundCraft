@@ -50,29 +50,20 @@ port2 => player[1].port;
 <<< "listening for player 2 on port", port2 >>>;
 player[1].listen();
 
-[
-"Marine",
-"Marauder",
-"Zealot",
-"Stalker",
-"Archon",
-"HighTemplar",
-"VoidRay",
-"SiegeTank",
-"Medivac",
-"Carrier",
-"Hellion",
-"Thor",
-"Immortal",
-"Colossus",
-"Sentry",
-"Ghost"
-] @=> string offensiveUnits[];
+string offensiveUnits[0];
 
 [
  [ "Marine", "Marauder", "SiegeTank", "Medivac", "Hellion", "Thor", "Ghost" ],
- [ "Zealot", "Stalker", "Archon", "HighTemplar", "VoidRay", "Carrier", "Immortal", "Colossus", "Sentry" ]
+ [ "Zealot", "Stalker", "Archon", "HighTemplar", "VoidRay", "Carrier", "Immortal", "Colossus", "Sentry", "Tempest", "Oracle", "Phoenix" ]
 ] @=> string playerUnits[][];
+
+for(int i; i < playerUnits.cap(); i++)
+{
+    for(int j; j < playerUnits[i].cap(); j++)
+    {
+        offensiveUnits << playerUnits[i][j];
+    }
+}
 
 for(int i; i < offensiveUnits.cap(); i++)
 {
