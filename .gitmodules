@@ -1,3 +1,6 @@
 [submodule "oscrecorder"]
 	path = oscrecorder
 	url = https://github.com/spencersalazar/oscrecorder.git
+[submodule "audio/ckutils"]
+	path = audio/ckutils
+	url = https://github.com/spencersalazar/ckutils.git
