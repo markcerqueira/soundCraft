@@ -1,17 +1,20 @@
 
-class MarineArp extends Arp
+
+class VoidRayArp extends Arp
 {
-    SawOsc c => LPF filter => ADSR envelope => outlet;
+    SinOsc m => TriOsc c => LPF filter => ADSR envelope => outlet;
     ADSR filterEnvelope => blackhole;
     
-    envelope.set(5::ms, 5::ms, 1, 5::ms);
-    1 => envelope.keyOff;
-    filterEnvelope.set(50::ms, 100::ms, 0.5, 100::ms);
-    1 => filterEnvelope.keyOff;
+    envelope.set(0.5::second, 0.5::second, 1.0, 0.5::second);
+    //1 => envelope.keyOff;
+    filterEnvelope.set(0.5::second, 0.5::second, 1.0, 5::second);
+    //1 => filterEnvelope.keyOff;
     
     220 => c.freq;
+    100 => m.gain;
+    2 => c.sync;
     c.freq()*8 => filter.freq;
-    2 => filter.Q;
+    20 => filter.Q;
     
     Math.pow(2.0,1.0/12.0) => float semitone;
     0 => float detune;
@@ -22,9 +25,9 @@ class MarineArp extends Arp
     {
         while(true)
         {
-            c.freq()+4000*filterEnvelope.value() => filter.freq;
+            //c.freq()+4000*filterEnvelope.value() => filter.freq;
             if(filter.freq() > second/samp/4)
-            second/samp/4 => filter.freq;
+                second/samp/4 => filter.freq;
             20::ms => now;
         }
     }
@@ -32,6 +35,8 @@ class MarineArp extends Arp
     fun float freq(float f)
     {
         f*Math.pow(semitone,Std.rand2f(-detune, detune)) => c.freq;
+        c.freq() => filter.freq;
+        c.freq() * 2 => m.freq;
         return f;
     }
     
@@ -62,37 +67,51 @@ class ArpPoly extends Poly
 {
     fun UGen create()
     {
-        MarineArp a;
+        VoidRayArp a;
         0.075 => a.gain;
         return a;
     }
 }
 
-public class MarineArpeggio extends MelodyArpeggio
+public class VoidRayArpeggio extends MelodyArpeggio
 {
     ArpPoly poly => Pan8 pan;
     6 => poly.gain;
 
     poly.setNumVoices(8);
     
+    Lerp panVal;
+    
     0 => int thecount;
     
-    //fun UGen @ output() { return poly; }
+    spork ~ go2();
+    
     fun UGen @ output(int c) { return pan.chan(c); }
     
     fun Arp @ getArp() { return (poly.get() $ Arp); }
-    fun int[] getNotes() { return [36, 34, 39, 41]; }
-    fun int getOctaves() { return 4; }
-    fun dur getQuarterNote() { return 0.125::second; }
-    fun int getMinSteps() { return 8; }
+    // fun int[] getNotes() { return [36, 34, 39, 41]; }
+    fun int[] getNotes() { return [12, 0]; }
+    fun int getOctaves() { return 1; }
+    fun dur getQuarterNote() { return 2::second; }
+    fun int getMinSteps() { return 2; }
     fun int phaseShift() { return 0; }
     
     fun int stepStart() { return techLevel*2; }
     
     fun void set(int techLevel, int stepNo)
     {
-        0.5+thecount/2.0 => pan.pan;
+        0.5+thecount/2.0 => panVal.target;
         thecount++;
     }
+    
+    fun void go2()
+    {
+        while(true)
+        {
+            panVal.lerp() => pan.pan;
+            20::ms => now;
+        }
+    }
 }
+
 

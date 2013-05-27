@@ -1,4 +1,6 @@
 
+Machine.add("ckutils/Lerp.ck");
+
 Machine.add("Plopper.ck");
 Machine.add("BassDrone.ck");
 Machine.add("Arp.ck");
@@ -13,6 +15,8 @@ Machine.add("Stalker.ck");
 Machine.add("Sentry.ck");
 Machine.add("HighTemplar.ck");
 Machine.add("Archon.ck");
+Machine.add("VoidRay.ck");
+
 Machine.add("Death.ck");
 Machine.add("NukeFilter.ck");
 

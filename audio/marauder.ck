@@ -82,7 +82,7 @@ public class MarauderArpeggio extends MelodyArpeggio
     fun UGen @ output(int c) { return pan.chan(c); }
     fun Arp @ getArp() { return (poly.get() $ Arp); }
     fun int[] getNotes() { return [39, 41, 36, 34]; }
-    fun int getOctaves() { return 3; }
+    fun int getOctaves() { return 4; }
     fun dur getQuarterNote() { return 1::second; }
     fun int getMinSteps() { return 2; }
     fun int phaseShift() { return 0; }

@@ -53,7 +53,7 @@ public class MelodyArpeggio extends Arpeggio
                     this.set(techLevel, i);
                 }
                 
-                noteIndex/notes.cap() => int octave;
+                Math.min(noteIndex/notes.cap(), nOctave-1) $int => int octave;
                 if(octave > 4)
                 {
                     1 +=> noteInc;
@@ -75,7 +75,7 @@ public class MelodyArpeggio extends Arpeggio
                 if(i >= stepStart())
                 {
                     note => Std.mtof => arp.freq;
-                
+                    
                     arp.keyOn();
                     quarter => now;
                     if(arp.length() < quarter)

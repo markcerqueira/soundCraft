@@ -12,7 +12,7 @@ oscsend localhost 6449 /lorkCraft/abilitiesUsedBank.SC2Bank ss Ghost TacNukeStri
 
 
 
-
+oscsend localhost 6450 /lorkCraft/unitsBuiltBank.SC2Bank si VoidRay 10
 oscsend localhost 6449 /lorkCraft/abilitiesUsedBank.SC2Bank ss VoidRay VoidRaySwarmDamageBoost
 oscsend localhost 6449 /lorkCraft/abilitiesUsedBank.SC2Bank ss VoidRay attack
 oscsend localhost 6449 /lorkCraft/abilitiesUsedBank.SC2Bank ss Battlecruiser Yamato

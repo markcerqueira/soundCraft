@@ -1,0 +1,8 @@
+#!/bin/bash
+
+trap 'kill $(jobs -p)' INT
+
+oscplayer localhost 6449 < $1_6449.yml > /dev/null &
+oscplayer localhost 6450 < $1_6450.yml > /dev/null &
+
+wait
