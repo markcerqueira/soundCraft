@@ -1,4 +1,0 @@
-#!/bin/bash
-
-oscrecorder 6449 > $1_6449.yml &
-oscrecorder 6450 > $1_6450.yml &

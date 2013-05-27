@@ -1,0 +1,3 @@
+[submodule "oscrecorder"]
+	path = oscrecorder
+	url = https://github.com/spencersalazar/oscrecorder.git
