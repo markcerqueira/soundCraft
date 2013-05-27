@@ -53,7 +53,7 @@ player[1].listen();
 string offensiveUnits[0];
 
 [
- [ "Marine", "Marauder", "SiegeTank", "Medivac", "Hellion", "Thor", "Ghost" ],
+ [ "Marine", "Marauder", "SiegeTank", "Medivac", "Hellion", "Thor", "Ghost", "Battlecruiser", "VikingFighter", "Banshee" ],
  [ "Zealot", "Stalker", "Archon", "HighTemplar", "VoidRay", "Carrier", "Immortal", "Colossus", "Sentry", "Tempest", "Oracle", "Phoenix" ]
 ] @=> string playerUnits[][];
 

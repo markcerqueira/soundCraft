@@ -15,3 +15,9 @@ oscsend localhost 6449 /lorkCraft/abilitiesUsedBank.SC2Bank ss Ghost TacNukeStri
 
 oscsend localhost 6449 /lorkCraft/abilitiesUsedBank.SC2Bank ss VoidRay VoidRaySwarmDamageBoost
 oscsend localhost 6449 /lorkCraft/abilitiesUsedBank.SC2Bank ss VoidRay attack
+oscsend localhost 6449 /lorkCraft/abilitiesUsedBank.SC2Bank ss Battlecruiser Yamato
+
+
+/lorkCraft/abilitiesUsedBank.SC2Bank (ss): VikingFighter, AssaultMode
+/lorkCraft/abilitiesUsedBank.SC2Bank (ss): VikingFighter, FighterMode
+249.785: /lorkCraft/abilitiesUsedBank.SC2Bank (ss): Banshee, BansheeCloak
