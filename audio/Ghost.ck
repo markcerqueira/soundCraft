@@ -67,7 +67,7 @@ class ArpPoly extends Poly
 {
     fun UGen create()
     {
-        VoidRayArp a;
+        GhostArp a;
         0.075 => a.gain;
         return a;
     }
