@@ -2,7 +2,7 @@
 
 trap 'kill $(jobs -p)' INT
 
-oscplayer -a 127.0.0.1 -p 6449 -f $1_6449.yml > /dev/null &
-oscplayer -a 127.0.0.1 -p 6450 -f $1_6450.yml > /dev/null &
+oscplayer localhost 6449 < $1_6449.yml > /dev/null &
+oscplayer localhost 6450 < $1_6450.yml > /dev/null &
 
 wait
