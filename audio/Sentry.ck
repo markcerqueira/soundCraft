@@ -3,20 +3,30 @@ public class SentryArpeggio extends RhythmArpeggio
 {
     Gain master => Pan8 pan;
     4 => pan.gain;
-    SndBuf drum[2];
+    // SndBuf drum[2];
+    Impulse imp[2];
+    LPF lpf[2];
+
     
     // pandeiro
-    "samples/UN_PAND1_OPN_02.aif" => drum[0].read;
+    //"samples/UN_PAND1_OPN_02.aif" => drum[0].read;
     // repinique
-    "samples/UN_RDM_HI_EDG_01.aif" => drum[1].read;
-    1.5 => master.gain;
-    
+    //"samples/UN_RDM_HI_EDG_01.aif" => drum[1].read;
+    6 => master.gain;
+    500 => lpf[0].freq;
+    1000 => lpf[1].freq;
+        
     float pannings[2];
     
-    for(int i; i < drum.cap(); i++)
+    // for(int i; i < drum.cap(); i++)
+    // {
+    //    drum[i] => master;
+    //    drum[i].samples() => drum[i].pos;
+    // }
+    
+    for( int i; i < imp.cap(); i++ )
     {
-        drum[i] => master;
-        drum[i].samples() => drum[i].pos;
+        imp[i] => lpf[i] => master;
     }
     
     fun UGen @ output(int c) { return pan.chan(c); }
@@ -25,8 +35,9 @@ public class SentryArpeggio extends RhythmArpeggio
     {
         //Math.pow(1.1, Std.rand2f(-1,1)) => drum[d].rate;
         pannings[d] => pan.pan;
-        intensity => drum[d].gain;
-        0 => drum[d].pos;
+        intensity => imp[d].next;
+        // intensity => drum[d].gain;
+        // 0 => drum[d].pos;
     }
     
     fun void nextRhythm()

@@ -25,7 +25,8 @@ public class HighTemplarArpeggio extends RhythmArpeggio
     {
         //Math.pow(1.1, Std.rand2f(-1,1)) => drum[d].rate;
         pannings[d] => pan.pan;
-        intensity => drum[d].gain;
+        intensity * Std.rand2f(1,.6) => drum[d].gain;
+        Std.rand2f(.99,1.01) => drum[d].rate;
         0 => drum[d].pos;
     }
     

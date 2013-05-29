@@ -1,14 +1,16 @@
 class Plop extends Chubgraph
 {
-    SinOsc mod => TriOsc s => ADSR env => outlet;
+    SinOsc mod => SinOsc s => HPF hpf => ADSR env => outlet;
     
+    // added: ge
+    500 => hpf.freq;
     300 => mod.gain;
-    env.set(10::ms, 20::ms, 0.5, 400::ms);
+    env.set(15::ms, 20::ms, 0.01, 50::ms);
     
     fun float freq(float f)
     {
         f => s.freq;
-        s.freq()*3.5 => mod.freq;
+        s.freq()*2.5 => mod.freq;
         return f;
     }
 }
@@ -28,7 +30,8 @@ public class Plopper extends Chubgraph
     ploppy.setNumVoices(48);
     0.1 => ploppy.gain;
     
-    [36, 34, 39, 41] @=> int notes[];
+    // [36, 34, 39, 41] @=> int notes[];
+    [72, 68, 78, 82] @=> int notes[];
     
     fun void plop()
     {
@@ -37,7 +40,7 @@ public class Plopper extends Chubgraph
         notes[Std.rand2(0,notes.cap()-1)] => Std.mtof => plop.freq;
         
         1 => plop.env.keyOn;
-        100::ms => now;
+        40::ms => now;
         1 => plop.env.keyOff;
     }
     
@@ -48,7 +51,7 @@ public class Plopper extends Chubgraph
         notes[Std.rand2(0,notes.cap()-1)] + 24 => Std.mtof => plop.freq;
         
         1 => plop.env.keyOn;
-        100::ms => now;
+        40::ms => now;
         1 => plop.env.keyOff;
     }
 }

@@ -1,11 +1,32 @@
 
 class MarauderArp extends Arp
 {
-    SinOsc m => SinOsc c => LPF filter => ADSR envelope => outlet;
+    SqrOsc m => SinOsc c => LPF filter => ADSR envelope => outlet;
     m => SinOsc c2 => filter;
     ADSR filterEnvelope => blackhole;
     2 => c.sync;
-    300 => m.gain;
+    600 => m.gain;
+    
+    // added: ge
+    Vector3D iMod;
+    iMod.set( 600,600,.1 );
+    // interp rate
+    5::ms => dur INTERP_RATE;
+    spork ~ iMod.interp( INTERP_RATE );
+    spork ~ apply( INTERP_RATE );
+    
+    // added: ge
+    SinOsc lfo => Gain add => outlet;
+    // step
+    Step step => add;
+    // set gain
+    .5 => add.gain;
+    // set setp
+    1.2 => step.next;
+    // set to multiply
+    3 => outlet.op;
+    // set LFO freq
+    .05 + Std.rand2f(0,.05) => lfo.freq;
     
     
     envelope.set(20::ms, 10::ms, 0.4, 100::ms);
@@ -31,6 +52,18 @@ class MarauderArp extends Arp
         }
     }
     
+    // applying the value
+    fun void apply( dur T )
+    {
+        while( true )
+        {
+            // apply
+            iMod.value() => m.gain;
+            // advance time
+            T => now;
+        }
+    }
+    
     fun float freq(float f)
     {
         f => c.freq;
@@ -41,6 +74,7 @@ class MarauderArp extends Arp
     
     fun void keyOn()
     {
+        1 => iMod.value;
         1 => envelope.keyOn;
         1 => filterEnvelope.keyOn;
     }

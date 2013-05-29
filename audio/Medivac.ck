@@ -1,13 +1,25 @@
 
 class MedivacArp extends Arp
 {
-    SinOsc m => SqrOsc c => LPF filter => ADSR envelope => outlet;
+    TriOsc m => SinOsc c => LPF filter => ADSR envelope => outlet;
     SinOsc fmod => ADSR filterEnvelope => blackhole;
-    Phasor detunePhasor => Gen7 detuneRamp => blackhole;
+    // Phasor detunePhasor => Gen7 detuneRamp => blackhole;
     2 => c.sync;
-    2000 => m.gain;
-    
+    2000 => m.gain;    
     0.1 => fmod.freq;
+    
+    // added: ge
+    SinOsc lfo => Gain add => blackhole;
+    // step
+    Step step => add;
+    // set gain
+    .5 => add.gain;
+    // set setp
+    1 => step.next;
+    // set to multiply
+    3 => outlet.op;
+    // set LFO freq
+    .015 => lfo.freq;
     
     envelope.set(100::ms, 50::ms, 0.8, 150::ms);
     1 => envelope.keyOff;
@@ -15,15 +27,15 @@ class MedivacArp extends Arp
     1 => filterEnvelope.keyOff;
     -1 => filterEnvelope.op;
     
-    [0.0,
-     0.15, 0.0,
-     0.35, 1.0,
-     0.35, 0.0,
-     0.15, 0.0
-     ] => detuneRamp.coefs;
-    0.5 => detunePhasor.freq;
+    //[0.0,
+    // 0.15, 0.0,
+    // 0.35, 1.0,
+    // 0.35, 0.0,
+    // 0.15, 0.0
+    // ] => detuneRamp.coefs;
+    //0.5 => detunePhasor.freq;
     
-    220 => float _freq;
+    110 => float _freq;
     2 => filter.Q;
 
     float detune;
@@ -37,11 +49,14 @@ class MedivacArp extends Arp
     {
         while(true)
         {
-            if(detune > 0)
-            {
-                _freq*2*Math.pow(semitone, -detuneRamp.last()*detune) => c.freq;
-                _freq*8*Math.pow(semitone, -detuneRamp.last()*detune) => m.freq;
-            }
+            //if(detune > 0)
+            //{
+            //    _freq*2*Math.pow(semitone, -detuneRamp.last()*detune) => c.freq;
+            //    _freq*8*Math.pow(semitone, -detuneRamp.last()*detune) => m.freq;
+            //}
+            
+            _freq * 2 + lfo.last()*(1+techLevel)*10 => c.freq;
+            _freq * 8 + lfo.last()*(1+techLevel)*10 => m.freq;
             
             c.freq()+3000*Math.pow(techLevel+2,filterEnvelope.last()*1.25) => filter.freq;
             if(filter.freq() > second/samp/4)
@@ -61,7 +76,7 @@ class MedivacArp extends Arp
     
     fun void keyOn()
     {
-        0 => detunePhasor.phase;
+        //0 => detunePhasor.phase;
         1 => envelope.keyOn;
         1 => filterEnvelope.keyOn;
     }
@@ -72,14 +87,15 @@ class MedivacArp extends Arp
         1 => filterEnvelope.keyOff;
     }
     
+    set( 12, 0 );
     fun void set(int _techLevel, int stepNo)
     {
         _techLevel => techLevel;
         
-        if(techLevel > 5 && maybe)
+        //if(techLevel > 5 && maybe)
             techLevel/8.0 => detune;
-        else
-            0 => detune;
+        //else
+        //    0 => detune;
     }
     
     fun dur length() { return envelope.attackTime() + envelope.decayTime(); }
@@ -107,7 +123,7 @@ public class MedivacArpeggio extends MelodyArpeggio
     fun Arp @ getArp() { return (poly.get() $ Arp); }
     fun int[] getNotes() { return [39, 41, 36, 34]; }
     fun int getOctaves() { return 3; }
-    fun dur getQuarterNote() { return 2::second; }
+    fun dur getQuarterNote() { return 5::second; }
     fun int getMinSteps() { return 1; }
     fun int phaseShift() { return 0; }
     

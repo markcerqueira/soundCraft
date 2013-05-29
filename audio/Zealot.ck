@@ -5,8 +5,10 @@ public class ZealotArpeggio extends RhythmArpeggio
     4 => pan.gain;
     SndBuf drum[2];
     
-    "samples/UN_AFCNG_OPN_01.aif" => drum[0].read;
-    "samples/UN_LCNG_HI_OPN_02.aif" => drum[1].read;
+    //"samples/UN_AFCNG_OPN_01.aif" => drum[0].read;
+    // "samples/UN_LCNG_HI_OPN_02.aif" => drum[1].read;
+    "samples/__beep-3.aiff" => drum[0].read;
+    "samples/__beep-4.aiff" => drum[1].read;
     1.5 => master.gain;
     
     float pannings[2];
@@ -23,7 +25,8 @@ public class ZealotArpeggio extends RhythmArpeggio
     {
         //Math.pow(1.1, Std.rand2f(-1,1)) => drum[d].rate;
         pannings[d] => pan.pan;
-        intensity => drum[d].gain;
+        intensity * Std.rand2f(1,.5) => drum[d].gain;
+        Std.rand2f(.98,1.02)*.5 => drum[d].rate;
         0 => drum[d].pos;
     }
     
@@ -45,8 +48,8 @@ public class ZealotArpeggio extends RhythmArpeggio
         ],
         
         [
-            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0],
-            [0.5, 0.0, 0.5, 0.5, 0.5, 0.0, 0.0, 0.0]
+            [0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.5, 0.0],
+            [0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.0]
         ],
         
         [
@@ -60,7 +63,7 @@ public class ZealotArpeggio extends RhythmArpeggio
         ],
         
         [
-            [0.0, 0.0, 0.0, 0.0, 0.7, 0.5, 0.7, 0.5],
+            [0.0, 0.0, 0.0, 0.0, 0.7, 0.0, 0.7, 0.5],
             [0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0]
         ],
         

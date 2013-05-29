@@ -3,20 +3,29 @@ public class StalkerArpeggio extends RhythmArpeggio
 {
     Gain master => Pan8 pan;
     4 => pan.gain;
-    SndBuf drum[2];
+    //SndBuf drum[2];
+    Impulse imp[2];
+    LPF lpf[2];
     
-    "samples/TMD EH SNAP 1.aif" => drum[0].read;
-    "samples/DAT-MinimalElectro_Snr.aif" => drum[1].read;
-    0.5 => drum[1].gain;
-    1.1 => master.gain;
+    //"samples/TMD EH SNAP 1.aif" => drum[0].read;
+    //"samples/DAT-MinimalElectro_Snr.aif" => drum[1].read;
+    //0.5 => drum[1].gain;
+    5 => master.gain;
+    1000 => lpf[0].freq;
+    2000 => lpf[1].freq;
     
     float pannings[2];
     
-    for(int i; i < drum.cap(); i++)
+    //for(int i; i < drum.cap(); i++)
+    //{
+    //    drum[i] => master;
+    //    drum[i].samples() => drum[i].pos;
+    //}
+    
+    for( int i; i < imp.cap(); i++ )
     {
-        drum[i] => master;
-        drum[i].samples() => drum[i].pos;
-    }
+        imp[i] => lpf[i] => master;
+    }    
     
     fun UGen @ output(int c) { return pan.chan(c); }
     
@@ -24,8 +33,10 @@ public class StalkerArpeggio extends RhythmArpeggio
     {
         //Math.pow(1.1, Std.rand2f(-1,1)) => drum[d].rate;
         pannings[d] => pan.pan;
-        intensity => drum[d].gain;
-        0 => drum[d].pos;
+        intensity => imp[d].next;
+        // intensity * Std.rand2f(1,.5) => drum[d].gain;
+        // Std.rand2f(.96,1.04) => drum[d].rate;
+        // 0 => drum[d].pos;
     }
     
     fun void nextRhythm()

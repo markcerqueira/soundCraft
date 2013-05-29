@@ -61,7 +61,7 @@ public class MelodyArpeggio extends Arpeggio
                     4 => octave;
                 }
                 
-                notes[noteIndex%notes.cap()] + octave*12 + 12 => int note;
+                notes[noteIndex%notes.cap()] + octave*12 + 12 => float note;
                 //<<< "arp note:", note >>>;
                 if(i == nSteps/2)
                     -noteInc => noteInc;
