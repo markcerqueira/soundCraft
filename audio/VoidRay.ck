@@ -30,7 +30,7 @@ class VRVoice extends Chubgraph
     10 => m2.gain;
 
     c.freq()*5 => filter.freq;
-    2 => filter.Q;
+    0.5 => filter.Q;
 
     0.5 => sweeper.Q;
 
@@ -108,7 +108,7 @@ class ArpPoly extends Poly
 public class VoidRayArpeggio extends MelodyArpeggio
 {
     ArpPoly poly => Pan8 pan;
-    6 => poly.gain;
+    2 => poly.gain;
 
     poly.setNumVoices(2);
     

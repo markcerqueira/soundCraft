@@ -10,7 +10,7 @@ public class StalkerArpeggio extends RhythmArpeggio
     //"samples/TMD EH SNAP 1.aif" => drum[0].read;
     //"samples/DAT-MinimalElectro_Snr.aif" => drum[1].read;
     //0.5 => drum[1].gain;
-    5 => master.gain;
+    2.5 => master.gain;
     1000 => lpf[0].freq;
     2000 => lpf[1].freq;
     

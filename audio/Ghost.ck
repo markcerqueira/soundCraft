@@ -14,7 +14,7 @@ class GhostArp extends Arp
     100 => m.gain;
     2 => c.sync;
     c.freq()*8 => filter.freq;
-    20 => filter.Q;
+    10 => filter.Q;
     
     Math.pow(2.0,1.0/12.0) => float semitone;
     0 => float detune;
