@@ -4,6 +4,7 @@ oscsend localhost 6449 /lorkCraft/unitsBuiltBank.SC2Bank si Medivac 8
 oscsend localhost 6449 /lorkCraft/researchCompletedBank.SC2Bank si Stim 10
 
 oscsend localhost 6450 /lorkCraft/unitsBuiltBank.SC2Bank si Zealot 16
+oscsend localhost 6450 /lorkCraft/unitsBuiltBank.SC2Bank si Archon 16
 oscsend localhost 6450 /lorkCraft/unitsBuiltBank.SC2Bank si Stalker 16
 oscsend localhost 6450 /lorkCraft/unitsBuiltBank.SC2Bank si HighTemplar 10
 oscsend localhost 6450 /lorkCraft/researchCompletedBank.SC2Bank si Stim 10

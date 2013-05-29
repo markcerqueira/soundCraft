@@ -20,7 +20,7 @@ for(int i; i < NUM_CHANNELS; i++)
     bassDrone[1] => reverb[i];
     
     0.05 => reverb[i].mix;
-    0.2 => reverb[i].gain;
+    0.1 => reverb[i].gain;
 }
 
 new MarineArpeggio @=> arpeggio["Marine"];
@@ -255,8 +255,11 @@ fun void listenForUnitsAndStructuresLost(int p)
             if(key == "units_lost" && value > totalLost)
             {
                 //<<< "STRIKE!", "" >>>;
-                value => totalLost;
-                death.strike();
+                while(totalLost < value)
+                {
+                    totalLost++;
+                    spork ~ death.strike(Std.rand2f(50, 300)::ms);
+                }
             }
         }
     }

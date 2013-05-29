@@ -86,7 +86,7 @@ public class MarineArpeggio extends MelodyArpeggio
     ArpPoly poly => Pan8 pan;
     6 => poly.gain;
 
-    poly.setNumVoices(8);
+    poly.setNumVoices(3);
     
     0 => int thecount;
     

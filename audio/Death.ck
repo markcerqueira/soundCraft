@@ -25,4 +25,12 @@ public class Death extends Chubgraph
         Std.rand2f(.8,1) => buffy.rate;
         0 => buffy.pos;
     }
+    
+    fun void strike(dur after)
+    {
+        after => now;
+        Std.rand2f(.8,1.2) => buffy.gain;
+        Std.rand2f(.8,1) => buffy.rate;
+        0 => buffy.pos;
+    }
 }
