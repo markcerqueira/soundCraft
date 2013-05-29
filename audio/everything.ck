@@ -17,6 +17,8 @@ Machine.add("Sentry.ck");
 Machine.add("HighTemplar.ck");
 Machine.add("Ghost.ck");
 Machine.add("Archon.ck");
+Machine.add("VoidRay.ck");
+
 Machine.add("Death.ck");
 Machine.add("NukeFilter.ck");
 

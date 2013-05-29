@@ -1,65 +1,97 @@
 
-
-class GhostArp extends Arp
+class VRVoice extends Chubgraph
 {
-    SinOsc m => TriOsc c => LPF filter => ADSR envelope => outlet;
-    ADSR filterEnvelope => blackhole;
+    TriOsc m2 => SqrOsc m => SawOsc c => LPF filter => outlet;
+    m => m2;
+    c => BPF sweeper => outlet;
+    0.2 => sweeper.gain;
+
+    SawOsc modm => SinOsc modc => blackhole;
+    Std.rand2f(0,1) => modc.phase;
+    0.05 => modc.freq;
+    2 => modc.sync;
+    0.1 => modm.gain;
+    0.8 => modm.freq;
+
+    SawOsc modm2 => SinOsc modc2 => blackhole;
+    Std.rand2f(0,1) => modc2.phase;
+    0.2 => modc2.freq;
+    2 => modc2.sync;
+    0.5 => modm2.gain;
+    0.9 => modm2.freq;
     
-    envelope.set(0.5::second, 0.5::second, 1.0, 0.5::second);
-    //1 => envelope.keyOff;
-    filterEnvelope.set(0.5::second, 0.5::second, 1.0, 5::second);
-    //1 => filterEnvelope.keyOff;
-    
-    220 => c.freq;
-    100 => m.gain;
+    27 => float note;
+    note => Std.mtof => c.freq;
     2 => c.sync;
-    c.freq()*8 => filter.freq;
-    20 => filter.Q;
-    
-    Math.pow(2.0,1.0/12.0) => float semitone;
-    0 => float detune;
-    
+    c.freq() * 2 => m.freq;
+    500 => m.gain;
+    2 => m.sync;
+    c.freq() * 0.49 => m2.freq;
+    10 => m2.gain;
+
+    c.freq()*5 => filter.freq;
+    2 => filter.Q;
+
+    0.5 => sweeper.Q;
+
+    Math.pow(2,1.0/12.0) => float semitoneRatio;
+
     spork ~ go();
+    
+    fun float freq(float f)
+    {
+        f => c.freq;
+        c.freq()*5 => filter.freq;
+        c.freq() * 2 => m.freq;
+        c.freq() * 0.49 => m2.freq;
+        return f;
+    }
     
     fun void go()
     {
         while(true)
         {
-            //c.freq()+4000*filterEnvelope.value() => filter.freq;
-            if(filter.freq() > second/samp/4)
-                second/samp/4 => filter.freq;
+            1000*Math.pow(3,modc2.last()) => sweeper.freq;
+    
+            //c.freq()+2000*(2+modc.last()) => filter.freq;
+            Math.pow(2,modc.last())*500 => m.gain;
+    
+            10*Math.pow(2, 1+modc2.last()) => m2.gain;
+    
             20::ms => now;
         }
     }
+}
+
+class VoidRayArp extends Arp
+{
+    VRVoice top => Envelope envelope => outlet;
+    VRVoice bottom => envelope;
+    
+    1 => envelope.keyOff;
     
     fun float freq(float f)
     {
-        f*Math.pow(semitone,Std.rand2f(-detune, detune)) => c.freq;
-        c.freq() => filter.freq;
-        c.freq() * 2 => m.freq;
+        f => top.freq;
+        f/2  => bottom.freq;
         return f;
     }
     
     fun void keyOn()
     {
         1 => envelope.keyOn;
-        1 => filterEnvelope.keyOn;
     }
     
     fun void keyOff()
     {
         1 => envelope.keyOff;
-        1 => filterEnvelope.keyOff;
     }
     
     fun void set(int techLevel, int stepNo)
     {
-        (2+20*techLevel)::ms => envelope.attackTime;
-        Math.min(5+10*techLevel, 20)::ms => envelope.decayTime;
-        Math.min(5+10*techLevel, 500)::ms => envelope.releaseTime;
     }
     
-    fun dur length() { return envelope.attackTime(); }
+    fun dur length() { return 1::second; }
 }
 
 
@@ -68,17 +100,17 @@ class ArpPoly extends Poly
     fun UGen create()
     {
         VoidRayArp a;
-        0.075 => a.gain;
+        0.5 => a.gain;
         return a;
     }
 }
 
-public class GhostArpeggio extends MelodyArpeggio
+public class VoidRayArpeggio extends MelodyArpeggio
 {
     ArpPoly poly => Pan8 pan;
     6 => poly.gain;
 
-    poly.setNumVoices(8);
+    poly.setNumVoices(2);
     
     Lerp panVal;
     
@@ -89,19 +121,18 @@ public class GhostArpeggio extends MelodyArpeggio
     fun UGen @ output(int c) { return pan.chan(c); }
     
     fun Arp @ getArp() { return (poly.get() $ Arp); }
-    // fun int[] getNotes() { return [36, 34, 39, 41]; }
-    fun int[] getNotes() { return [12, 0]; }
+    fun int[] getNotes() { return [36, 29]; }
     fun int getOctaves() { return 1; }
-    fun dur getQuarterNote() { return 2::second; }
-    fun int getMinSteps() { return 2; }
+    fun dur getQuarterNote() { return 8::second; }
+    fun int getMinSteps() { return 1; }
     fun int phaseShift() { return 0; }
     
     fun int stepStart() { return techLevel*2; }
     
     fun void set(int techLevel, int stepNo)
     {
-        0.5+thecount/2.0 => panVal.target;
-        thecount++;
+        if(stepNo%2 == 0)
+            Std.rand2(0,8) => panVal.target;
     }
     
     fun void go2()

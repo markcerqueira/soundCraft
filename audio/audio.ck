@@ -32,6 +32,7 @@ new SentryArpeggio @=> arpeggio["Stalker"];
 new HighTemplarArpeggio @=> arpeggio["HighTemplar"];
 new ArchonArpeggio @=> arpeggio["Archon"];
 new GhostArpeggio @=> arpeggio["Ghost"];
+new VoidRayArpeggio @=> arpeggio["VoidRay"];
 
 int nUnits[0];
 
