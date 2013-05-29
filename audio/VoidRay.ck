@@ -3,8 +3,10 @@ class VRVoice extends Chubgraph
 {
     TriOsc m2 => SqrOsc m => SawOsc c => LPF filter => outlet;
     m => m2;
-    c => BPF sweeper => outlet;
-    0.2 => sweeper.gain;
+    c => HPF sweeper => outlet;
+    0.05 => sweeper.gain;
+    
+    .25 => filter.gain;
 
     SawOsc modm => SinOsc modc => blackhole;
     Std.rand2f(0,1) => modc.phase;
@@ -32,7 +34,7 @@ class VRVoice extends Chubgraph
     c.freq()*5 => filter.freq;
     0.5 => filter.Q;
 
-    0.5 => sweeper.Q;
+    2 => sweeper.Q;
 
     Math.pow(2,1.0/12.0) => float semitoneRatio;
 

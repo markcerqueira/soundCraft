@@ -31,9 +31,9 @@ public class BassDrone extends Chubgraph
     
     spork ~ go();
     
-    setTechLevel(2);
-    setUnderConstruction(0);
-    setCompleted(0);
+    // setTechLevel(2);
+    // setUnderConstruction(0);
+    // setCompleted(0);
     fun void setUnderConstruction(int n)
     {
         n => numConstruction;
