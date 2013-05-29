@@ -99,7 +99,7 @@ class ArpPoly extends Poly
     fun UGen create()
     {
         MarauderArp a;
-        0.08 => a.gain;
+        0.05 => a.gain;
         return a;
     }
 }
