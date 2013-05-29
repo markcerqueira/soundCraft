@@ -2,16 +2,7 @@
 
 trap 'kill $(jobs -p)' INT
 
-skip=0
-
-if [ $# -eq 2 ]
-then
-  skip=$2
-fi
-
-cp -f ./oscrecorder/oscplayer .
-
-./oscplayer -a 127.0.0.1 -p 6450 -f $1_6449.yml -s $skip > /dev/null &
-./oscplayer -a 127.0.0.1 -p 6450 -f $1_6450.yml -s $skip > /dev/null &
+oscplayer localhost 6449 < $1_6449.yml > /dev/null &
+oscplayer localhost 6450 < $1_6450.yml > /dev/null &
 
 wait

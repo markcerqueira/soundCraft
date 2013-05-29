@@ -20,7 +20,7 @@ for(int i; i < NUM_CHANNELS; i++)
     bassDrone[1] => reverb[i];
     
     0.05 => reverb[i].mix;
-    0.1 => reverb[i].gain;
+    1 => reverb[i].gain;
 }
 
 new MarineArpeggio @=> arpeggio["Marine"];
