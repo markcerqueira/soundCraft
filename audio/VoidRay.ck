@@ -38,14 +38,32 @@ class VRVoice extends Chubgraph
 
     Math.pow(2,1.0/12.0) => float semitoneRatio;
 
+    Vector3D iFreq;
+    iFreq.set( Std.mtof(12), Std.mtof(36), 4 );
+    spork ~ iFreq.interp( 5::ms );
+    spork ~ apply( 5::ms );
+    
+    fun float apply( dur T )
+    {
+        while( true )
+        {
+            iFreq.value() => c.freq;
+            iFreq.value() * 5 => filter.freq;
+            iFreq.value() * 2 => m.freq;
+            iFreq.value() * .49 => m2.freq;
+            T => now;
+        }
+    }
+
     spork ~ go();
     
     fun float freq(float f)
     {
-        f => c.freq;
-        c.freq()*5 => filter.freq;
-        c.freq() * 2 => m.freq;
-        c.freq() * 0.49 => m2.freq;
+        f => iFreq.goal;
+        // f => c.freq;
+        // c.freq()*5 => filter.freq;
+        // c.freq() * 2 => m.freq;
+        // c.freq() * 0.49 => m2.freq;
         return f;
     }
     
@@ -123,7 +141,7 @@ public class VoidRayArpeggio extends MelodyArpeggio
     fun UGen @ output(int c) { return pan.chan(c); }
     
     fun Arp @ getArp() { return (poly.get() $ Arp); }
-    fun int[] getNotes() { return [36, 29]; }
+    fun int[] getNotes() { return [33, 29, 36, 27]; }
     fun int getOctaves() { return 1; }
     fun dur getQuarterNote() { return 8::second; }
     fun int getMinSteps() { return 1; }
