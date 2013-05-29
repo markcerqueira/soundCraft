@@ -6,6 +6,7 @@ NRev reverb[NUM_CHANNELS];
 NukeFilter nuke;
 
 Death death;
+1.6 => death.gain;
 Arpeggio arpeggio[0];
 Plopper plopper;
 BassDrone bassDrone[2];
@@ -20,7 +21,7 @@ for(int i; i < NUM_CHANNELS; i++)
     bassDrone[1] => reverb[i];
     
     0.05 => reverb[i].mix;
-    0.1 => reverb[i].gain;
+    0.2 => reverb[i].gain;
 }
 
 new MarineArpeggio @=> arpeggio["Marine"];

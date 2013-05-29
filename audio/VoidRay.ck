@@ -35,6 +35,8 @@ class VRVoice extends Chubgraph
     0.5 => filter.Q;
 
     2 => sweeper.Q;
+    
+    0 => int qty;
 
     Math.pow(2,1.0/12.0) => float semitoneRatio;
 
@@ -49,6 +51,11 @@ class VRVoice extends Chubgraph
         return f;
     }
     
+	fun void setQuantity(int _qty)
+    {
+        _qty => qty;
+    }
+    
     fun void go()
     {
         while(true)
@@ -56,7 +63,7 @@ class VRVoice extends Chubgraph
             1000*Math.pow(3,modc2.last()) => sweeper.freq;
     
             //c.freq()+2000*(2+modc.last()) => filter.freq;
-            Math.pow(2,modc.last())*500 => m.gain;
+            Math.pow(1.5,modc.last())*50*(qty*4+1) => m.gain;
     
             10*Math.pow(2, 1+modc2.last()) => m2.gain;
     
@@ -91,6 +98,7 @@ class VoidRayArp extends Arp
     
     fun void set(int techLevel, int stepNo)
     {
+        
     }
     
     fun dur length() { return 1::second; }
@@ -110,7 +118,7 @@ class ArpPoly extends Poly
 public class VoidRayArpeggio extends MelodyArpeggio
 {
     ArpPoly poly => Pan8 pan;
-    2 => poly.gain;
+    6 => poly.gain;
 
     poly.setNumVoices(2);
     
@@ -126,7 +134,7 @@ public class VoidRayArpeggio extends MelodyArpeggio
     fun int[] getNotes() { return [36, 29]; }
     fun int getOctaves() { return 1; }
     fun dur getQuarterNote() { return 8::second; }
-    fun int getMinSteps() { return 1; }
+    fun int getMinSteps() { return 2; }
     fun int phaseShift() { return 0; }
     
     fun int stepStart() { return techLevel*2; }

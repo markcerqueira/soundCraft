@@ -8,6 +8,7 @@ public class Arp extends Chubgraph
     fun dur length() { return 0::second; }
 	
 	fun void set(int techLevel, int stepNo) { }
+	fun void setQuantity(int qty) { }
     
     
     /* internal */

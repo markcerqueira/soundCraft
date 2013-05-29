@@ -50,6 +50,7 @@ public class MelodyArpeggio extends Arpeggio
                 {
                     getArp() @=> arp;
                     arp.set(techLevel, i);
+                    arp.setQuantity(nSteps);
                     this.set(techLevel, i);
                 }
                 

@@ -9,7 +9,7 @@ public class ZealotArpeggio extends RhythmArpeggio
     // "samples/UN_LCNG_HI_OPN_02.aif" => drum[1].read;
     "samples/__beep-3.aiff" => drum[0].read;
     "samples/__beep-4.aiff" => drum[1].read;
-    1.5 => master.gain;
+    0.475 => master.gain;
     
     float pannings[2];
     
