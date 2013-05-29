@@ -258,11 +258,7 @@ fun void listenForUnitsAndStructuresLost(int p)
             if(key == "units_lost" && value > totalLost)
             {
                 //<<< "STRIKE!", "" >>>;
-                while(totalLost < value)
-                {
-                    totalLost++;
-                    spork ~ death.strike(Std.rand2f(50, 300)::ms);
-                }
+                death.strike();
             }
         }
     }
