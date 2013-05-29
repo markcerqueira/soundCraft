@@ -117,7 +117,7 @@ public class MedivacArpeggio extends MelodyArpeggio
     ArpPoly poly => Pan8 pan;
     4 => poly.gain;
     
-    poly.setNumVoices(8);
+    poly.setNumVoices(3);
     
     fun UGen @ output(int c) { return pan.chan(c); }
     fun Arp @ getArp() { return (poly.get() $ Arp); }
