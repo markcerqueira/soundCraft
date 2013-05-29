@@ -61,12 +61,12 @@ class VRVoice extends Chubgraph
         while(true)
         {
             1000*Math.pow(3,modc2.last()) => sweeper.freq;
-    
+            
             //c.freq()+2000*(2+modc.last()) => filter.freq;
-            Math.pow(1.5,modc.last())*50*(qty*4+1) => m.gain;
-    
+            Math.pow(1.5,modc.last())*50*(qty+1) => m.gain;
+            
             10*Math.pow(2, 1+modc2.last()) => m2.gain;
-    
+            
             20::ms => now;
         }
     }
@@ -101,6 +101,12 @@ class VoidRayArp extends Arp
         
     }
     
+	fun void setQuantity(int _qty)
+    {
+        _qty => top.setQuantity;
+        _qty => bottom.setQuantity;
+    }
+    
     fun dur length() { return 1::second; }
 }
 
@@ -110,7 +116,6 @@ class ArpPoly extends Poly
     fun UGen create()
     {
         VoidRayArp a;
-        0.5 => a.gain;
         return a;
     }
 }
@@ -130,20 +135,28 @@ public class VoidRayArpeggio extends MelodyArpeggio
     
     fun UGen @ output(int c) { return pan.chan(c); }
     
-    fun Arp @ getArp() { return (poly.get() $ Arp); }
+    fun Arp @ getArp()
+    {
+        (poly.get() $ Arp) @=> Arp @ a;
+        getGain() => a.gain;
+        return a;
+    }
+    
     fun int[] getNotes() { return [36, 29]; }
     fun int getOctaves() { return 1; }
     fun dur getQuarterNote() { return 8::second; }
     fun int getMinSteps() { return 2; }
     fun int phaseShift() { return 0; }
     
-    fun int stepStart() { return techLevel*2; }
+    fun int stepStart() { return 0; }
     
     fun void set(int techLevel, int stepNo)
     {
         if(stepNo%2 == 0)
             Std.rand2(0,8) => panVal.target;
     }
+    
+    fun float getGain() { return 0.71; }
     
     fun void go2()
     {
