@@ -253,12 +253,14 @@ fun void listenForUnitsAndStructuresLost(int p)
             oe.getString() => string key;
             oe.getInt() => int value;
             
-            //<<< "/lorkCraft/scoreBank.SC2Bank:", key, value >>>;
+            // if(key == "units_lost" )
+            // <<< "/lorkCraft/scoreBank.SC2Bank:", key, value >>>;
             
             if(key == "units_lost" && value > totalLost)
             {
-                //<<< "STRIKE!", "" >>>;
+                // <<< "STRIKE!", "" >>>;
                 death.strike();
+                value => totalLost;
             }
         }
     }

@@ -40,14 +40,32 @@ class VRVoice extends Chubgraph
 
     Math.pow(2,1.0/12.0) => float semitoneRatio;
 
+    Vector3D iFreq;
+    iFreq.set( Std.mtof(12), Std.mtof(36), 4 );
+    spork ~ iFreq.interp( 5::ms );
+    spork ~ apply( 5::ms );
+    
+    fun float apply( dur T )
+    {
+        while( true )
+        {
+            iFreq.value() => c.freq;
+            iFreq.value() * 5 => filter.freq;
+            iFreq.value() * 2 => m.freq;
+            iFreq.value() * .49 => m2.freq;
+            T => now;
+        }
+    }
+
     spork ~ go();
     
     fun float freq(float f)
     {
-        f => c.freq;
-        c.freq()*5 => filter.freq;
-        c.freq() * 2 => m.freq;
-        c.freq() * 0.49 => m2.freq;
+        f => iFreq.goal;
+        // f => c.freq;
+        // c.freq()*5 => filter.freq;
+        // c.freq() * 2 => m.freq;
+        // c.freq() * 0.49 => m2.freq;
         return f;
     }
     
