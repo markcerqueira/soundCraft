@@ -2,9 +2,7 @@
 
 trap 'kill $(jobs -p)' INT
 
-cp -f ./oscrecorder/oscrecorder ./oscrecord
-
-./oscrecord -p 6449 -f $1_6449.yml &
-./oscrecord -p 6450 -f $1_6450.yml &
+oscrecorder 6449 > $1_6449.yml &
+oscrecorder 6450 > $1_6450.yml &
 
 wait
